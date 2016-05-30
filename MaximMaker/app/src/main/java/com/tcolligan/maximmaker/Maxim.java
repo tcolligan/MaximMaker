@@ -25,14 +25,14 @@ public class Maxim
 
     private String message;
     private String author;
-    private List<MaximTag> maximTags;
+    private List<String> tagsList;
     private long creationTimestamp;
 
-    public Maxim(String message, String author, List<MaximTag> maximTags)
+    public Maxim(String message, String author, List<String> tagsList)
     {
         this.message = message;
         this.author = author;
-        this.maximTags = maximTags;
+        this.tagsList = tagsList;
         this.creationTimestamp = System.currentTimeMillis();
     }
 
@@ -46,13 +46,12 @@ public class Maxim
 
         if (tagsArray != null)
         {
-            maximTags = new ArrayList<>();
+            tagsList = new ArrayList<>();
 
             for (int i = 0; i < tagsArray.length(); i++)
             {
-                JSONObject jsonObjectTag = tagsArray.getJSONObject(i);
-                MaximTag maximTag = new MaximTag(jsonObjectTag);
-                maximTags.add(maximTag);
+                String tag = tagsArray.getString(i);
+                tagsList.add(tag);
             }
         }
     }
@@ -64,7 +63,7 @@ public class Maxim
 
     public boolean hasTags()
     {
-        return maximTags != null;
+        return tagsList != null;
     }
 
     public String getMessage()
@@ -77,9 +76,9 @@ public class Maxim
         return author;
     }
 
-    public List<MaximTag> getMaximTags()
+    public List<String> getTagsList()
     {
-        return maximTags;
+        return tagsList;
     }
 
     public long getCreationTimestamp()
@@ -100,13 +99,13 @@ public class Maxim
 
         jsonObject.put(KEY_CREATION_TIMESTAMP, creationTimestamp);
 
-        if (maximTags != null)
+        if (tagsList != null)
         {
             JSONArray jsonArray = new JSONArray();
 
-            for (MaximTag maximTag : maximTags)
+            for (String tag : tagsList)
             {
-                jsonArray.put(maximTag.toJSONObject());
+                jsonArray.put(tag);
             }
 
             jsonObject.put(KEY_TAGS, jsonArray);
@@ -129,19 +128,19 @@ public class Maxim
             stringBuilder.append(TO_STRING_SEPARATOR);
         }
 
-        if (maximTags != null)
+        if (tagsList != null)
         {
-            int len = maximTags.size();
+            int len = tagsList.size();
             for (int i = 0; i < len; i++)
             {
-                MaximTag maximTag = maximTags.get(i);
+                String tag = tagsList.get(i);
                 if (i == len - 1)
                 {
-                    stringBuilder.append(maximTag.toString());
+                    stringBuilder.append(tag);
                 }
                 else
                 {
-                    stringBuilder.append(maximTag.toString());
+                    stringBuilder.append(tag);
                     stringBuilder.append(TO_STRING_SEPARATOR);
                 }
             }
