@@ -1,3 +1,11 @@
 <resources>
+    <!-- General Strings -->
     <string name="app_name">MaximMaker</string>
+    <string name="menu_label_done">Done</string>
+
+    <!-- Add Maxim Screen -->
+    <string name="quote_hint">Maxim or Quote</string>
+    <string name="author_hint">Author or Source</string>
+    <string name="tags_hint">Tags</string>
+    <string name="add_maxim_error_toast_text">You must add a maxim or quote!</string>
 </resources>
