@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;

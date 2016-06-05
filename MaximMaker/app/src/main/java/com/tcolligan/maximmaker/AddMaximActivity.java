@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,13 +12,17 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.tcolligan.maximmaker.data.Maxim;
+import com.tcolligan.maximmaker.data.MaximManager;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class AddMaximActivity extends AppCompatActivity
 {
+    private static final String TAG = "AddMaximActivity";
     private EditText maximEditText;
-    private EditText authorEdtiText;
+    private EditText authorEditText;
     private EditText tagsEditText;
 
     @Override
@@ -27,7 +32,7 @@ public class AddMaximActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_maxim);
 
         maximEditText = (EditText) findViewById(R.id.maximEditText);
-        authorEdtiText = (EditText) findViewById(R.id.authorEditText);
+        authorEditText = (EditText) findViewById(R.id.authorEditText);
         tagsEditText = (EditText) findViewById(R.id.tagsEditText);
 
         ActionBar actionBar = getSupportActionBar();
@@ -65,7 +70,7 @@ public class AddMaximActivity extends AppCompatActivity
     private void onDoneClicked()
     {
         String maxim = maximEditText.getText().toString();
-        String author = authorEdtiText.getText().toString();
+        String author = authorEditText.getText().toString();
         String tags = tagsEditText.getText().toString();
 
         if (TextUtils.isEmpty(maxim))
@@ -107,5 +112,7 @@ public class AddMaximActivity extends AppCompatActivity
         }
 
         Maxim maxim = new Maxim(message, author, tagsList);
+        MaximManager.getInstance().addAndSaveMaxim(getApplicationContext(), maxim);
+        Log.d(TAG, "Added maxim: " + maxim.toString());
     }
 }
