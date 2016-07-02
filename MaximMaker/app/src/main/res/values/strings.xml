@@ -7,6 +7,10 @@
     <string name="no_maxims_text">You do not have any maxims saved. Try adding one!</string>
     <string name="error_loading_maxims_text">Error loading Maxims!</string>
 
+    <!-- Maxim Deletion Dialog -->
+    <string name="delete_maxim_dialog_message">Delete this maxim?</string>
+    <string name="delete">Delete</string>
+
     <!-- Add Maxim Screen -->
     <string name="quote_hint">Maxim or Quote</string>
     <string name="author_hint">Author or Source</string>

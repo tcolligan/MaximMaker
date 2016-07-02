@@ -8,6 +8,8 @@ import com.tcolligan.maximmaker.data.MaximManager;
 import java.util.List;
 
 /**
+ * A presenter class to handle some of the logic for {@link MaximFeedActivity}
+ *
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
@@ -16,18 +18,25 @@ public class MaximFeedPresenter
 {
     private Context context;
     private MaximFeed maximFeed;
+    private MaximManager maximManager;
+    private boolean didShowLoadingState;
 
     public MaximFeedPresenter(Context context, MaximFeed maximFeed)
     {
         this.context = context.getApplicationContext();
         this.maximFeed = maximFeed;
+        this.maximManager = MaximManager.getInstance();
     }
 
     public void onResume()
     {
-        maximFeed.showLoadingState();
+        if (!didShowLoadingState)
+        {
+            maximFeed.showLoadingState();
+            didShowLoadingState = true;
+        }
 
-        MaximManager.getInstance().loadMaxims(context, new MaximManager.MaximsLoadedListener()
+        maximManager.loadMaxims(context, new MaximManager.MaximsLoadedListener()
         {
             @Override
             public void onMaximsLoaded(List<Maxim> loadedMaximList)
@@ -46,6 +55,12 @@ public class MaximFeedPresenter
                 }
             }
         });
+    }
+
+    public void onDeleteMaxim(Maxim maxim)
+    {
+        MaximManager.getInstance().deleteMaxim(context, maxim);
+        maximFeed.showMaxims(maximManager.getMaximList());
     }
 
     public interface MaximFeed

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * An adapter used to display CardViews with Maxims on the in {@link MaximFeedActivity}
+ *
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
@@ -19,10 +21,12 @@ import java.util.Locale;
 public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
 {
     private List<Maxim> maximList;
+    private MaximFeedListener maximFeedListener;
 
-    public MaximFeedAdapter(List<Maxim> maximList)
+    public MaximFeedAdapter(List<Maxim> maximList, MaximFeedListener maximFeedListener)
     {
         this.maximList = maximList;
+        this.maximFeedListener = maximFeedListener;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     @Override
     public void onBindViewHolder(MaximViewHolder holder, int position)
     {
-        Maxim maxim = maximList.get(position);
+        final Maxim maxim = maximList.get(position);
 
         holder.messageTextView.setText(maxim.getMessage());
 
@@ -59,6 +63,20 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
         {
             holder.tagsTextView.setVisibility(View.GONE);
         }
+
+        holder.rootView.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if (maximFeedListener != null)
+                {
+                    maximFeedListener.onLongClick(maxim);
+                }
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -69,6 +87,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
 
     public static class MaximViewHolder extends RecyclerView.ViewHolder
     {
+        public View rootView;
         public TextView messageTextView;
         public TextView authorTextView;
         public TextView tagsTextView;
@@ -76,9 +95,16 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
         public MaximViewHolder(View rootView)
         {
             super(rootView);
+
+            this.rootView = rootView;
             messageTextView = (TextView) rootView.findViewById(R.id.messageTextView);
             authorTextView = (TextView) rootView.findViewById(R.id.authorTextView);
             tagsTextView = (TextView) rootView.findViewById(R.id.tagsTextView);
         }
+    }
+
+    public interface MaximFeedListener
+    {
+        void onLongClick(Maxim maxim);
     }
 }

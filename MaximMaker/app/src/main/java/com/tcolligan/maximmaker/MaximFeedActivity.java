@@ -1,5 +1,7 @@
 package com.tcolligan.maximmaker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +16,14 @@ import com.tcolligan.maximmaker.data.Maxim;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeed
+/**
+ * An activity that displays all of the Maxims that the user has saved in a feed style UI.
+ *
+ * Created on 5/30/2016.
+ *
+ * @author Thomas Colligan
+ */
+public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeed, MaximFeedAdapter.MaximFeedListener
 {
     private ProgressBar progressBar;
     private TextView messageTextView;
@@ -48,10 +57,35 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         maximFeedPresenter.onResume();
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        maximFeedPresenter = null;
+    }
+
     public void onAddMaximButtonClicked(View v)
     {
         Intent intent = new Intent(this, AddMaximActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onLongClick(final Maxim maxim)
+    {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.delete_maxim_dialog_message)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        maximFeedPresenter.onDeleteMaxim(maxim);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create()
+                .show();
     }
 
     @Override
@@ -90,7 +124,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
 
         if (maximFeedAdapter == null)
         {
-            maximFeedAdapter = new MaximFeedAdapter(this.maximList);
+            maximFeedAdapter = new MaximFeedAdapter(this.maximList, this);
             recyclerView.setAdapter(maximFeedAdapter);
         }
         else

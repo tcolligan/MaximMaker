@@ -84,6 +84,16 @@ public class MaximManager
         saveMaxims(context);
     }
 
+    public void deleteMaxim(Context context, Maxim maxim)
+    {
+        boolean didRemove = maximList.remove(maxim);
+
+        if (didRemove)
+        {
+            saveMaxims(context);
+        }
+    }
+
     public List<Maxim> getMaximList()
     {
         return maximList;
