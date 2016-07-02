@@ -1,16 +1,15 @@
 package com.tcolligan.maximmaker;
 
+import android.app.AlertDialog;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
@@ -75,9 +74,7 @@ public class AddMaximActivity extends AppCompatActivity
 
         if (TextUtils.isEmpty(maxim))
         {
-            Toast toast = Toast.makeText(getApplicationContext(), R.string.add_maxim_error_toast_text, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL, 0 ,0);
-            toast.show();
+            showAddMaximErrorDialog();
             return;
         }
 
@@ -114,5 +111,14 @@ public class AddMaximActivity extends AppCompatActivity
         Maxim maxim = new Maxim(message, author, tagsList);
         MaximManager.getInstance().addAndSaveMaxim(getApplicationContext(), maxim);
         Log.d(TAG, "Added maxim: " + maxim.toString());
+    }
+
+    private void showAddMaximErrorDialog()
+    {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.add_maxim_error_text)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+                .show();
     }
 }
