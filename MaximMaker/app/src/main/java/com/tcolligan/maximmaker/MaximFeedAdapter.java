@@ -22,45 +22,12 @@ import java.util.Locale;
 public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
 {
     private List<Maxim> maximList;
-    private List<Maxim> visibleMaximsList;
     private MaximFeedListener maximFeedListener;
 
     public MaximFeedAdapter(List<Maxim> maximList, MaximFeedListener maximFeedListener)
     {
         this.maximList = maximList;
         this.maximFeedListener = maximFeedListener;
-
-        visibleMaximsList = new ArrayList<>();
-        visibleMaximsList.addAll(maximList);
-    }
-
-    public void filter(String text)
-    {
-        if (text.isEmpty())
-        {
-            visibleMaximsList.clear();
-            visibleMaximsList.addAll(maximList);
-        }
-        else
-        {
-            List<Maxim> searchResults = new ArrayList<>();
-            text = text.toLowerCase();
-
-            for (Maxim maxim : maximList)
-            {
-                if (maxim.getMessage().toLowerCase().contains(text) ||
-                        (maxim.hasAuthor() && maxim.getAuthor().toLowerCase().contains(text)) ||
-                        (maxim.hasTags() && maxim.getTagsCommaSeparated().toLowerCase().contains(text)))
-                {
-                    searchResults.add(maxim);
-                }
-            }
-
-            visibleMaximsList.clear();
-            visibleMaximsList.addAll(searchResults);
-        }
-
-        notifyDataSetChanged();
     }
 
     @Override
@@ -74,7 +41,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     @Override
     public void onBindViewHolder(MaximViewHolder holder, int position)
     {
-        final Maxim maxim = visibleMaximsList.get(position);
+        final Maxim maxim = maximList.get(position);
 
         holder.messageTextView.setText(maxim.getMessage());
 
@@ -116,7 +83,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     @Override
     public int getItemCount()
     {
-        return visibleMaximsList.size();
+        return maximList.size();
     }
 
     public static class MaximViewHolder extends RecyclerView.ViewHolder

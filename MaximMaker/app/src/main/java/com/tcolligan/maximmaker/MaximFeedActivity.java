@@ -73,26 +73,30 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
             @Override
             public boolean onQueryTextSubmit(String query)
             {
-                maximFeedAdapter.filter(query);
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText)
             {
-                maximFeedAdapter.filter(newText);
+                maximFeedPresenter.onSearchForText(newText);
                 return true;
             }
         });
 
-        searchView.setOnCloseListener(new SearchView.OnCloseListener()
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener()
         {
             @Override
-            public boolean onClose()
+            public boolean onMenuItemActionExpand(MenuItem item)
             {
-                // Filter by empty string so that all maxims are displayed
-                maximFeedAdapter.filter("");
-                return false;
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item)
+            {
+                maximFeedPresenter.onSearchClosed();
+                return true;
             }
         });
 
@@ -103,7 +107,10 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     public void onResume()
     {
         super.onResume();
-        maximFeedPresenter.onResume();
+
+        String currentSearch = searchView == null ? "" : searchView.getQuery().toString();
+        boolean isSearching = searchView != null && !searchView.isIconified();
+        maximFeedPresenter.onResume(currentSearch, isSearching);
     }
 
     @Override
@@ -178,7 +185,6 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         }
         else
         {
-            maximFeedAdapter.filter(searchView.getQuery().toString());
             maximFeedAdapter.notifyDataSetChanged();
         }
 
