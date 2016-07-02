@@ -38,7 +38,8 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     {
         if (text.isEmpty())
         {
-            resetVisibleList();
+            visibleMaximsList.clear();
+            visibleMaximsList.addAll(maximList);
         }
         else
         {
@@ -60,12 +61,6 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
         }
 
         notifyDataSetChanged();
-    }
-
-    public void resetVisibleList()
-    {
-        visibleMaximsList.clear();
-        visibleMaximsList.addAll(maximList);
     }
 
     @Override
@@ -113,7 +108,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
                     maximFeedListener.onLongClick(maxim);
                 }
 
-                return false;
+                return true;
             }
         });
     }
