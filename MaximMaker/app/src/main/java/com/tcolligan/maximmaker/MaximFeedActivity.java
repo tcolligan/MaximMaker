@@ -35,7 +35,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     private ProgressBar progressBar;
     private TextView messageTextView;
     private RecyclerView recyclerView;
-    private FloatingActionButton floatingActionButton;
+    private SearchView searchView;
 
     private MaximFeedPresenter maximFeedPresenter;
     private MaximFeedAdapter maximFeedAdapter;
@@ -50,7 +50,6 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         messageTextView = (TextView) findViewById(R.id.messageTextView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -67,7 +66,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         inflater.inflate(R.menu.maxim_feed_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {
@@ -179,7 +178,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         }
         else
         {
-            maximFeedAdapter.resetVisibleList();
+            maximFeedAdapter.filter(searchView.getQuery().toString());
             maximFeedAdapter.notifyDataSetChanged();
         }
 
