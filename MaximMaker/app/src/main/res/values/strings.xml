@@ -6,6 +6,7 @@
     <!-- Maxim Feed Screen -->
     <string name="no_maxims_text">You do not have any maxims saved. Try adding one!</string>
     <string name="error_loading_maxims_text">Error loading Maxims!</string>
+    <string name="search_hint">Search for Maxims</string>
 
     <!-- Maxim Deletion Dialog -->
     <string name="delete_maxim_dialog_message">Delete this maxim?</string>

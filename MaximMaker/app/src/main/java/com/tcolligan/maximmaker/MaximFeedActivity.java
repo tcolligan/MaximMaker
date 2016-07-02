@@ -3,10 +3,17 @@ package com.tcolligan.maximmaker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +35,8 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     private ProgressBar progressBar;
     private TextView messageTextView;
     private RecyclerView recyclerView;
+    private FloatingActionButton floatingActionButton;
+
     private MaximFeedPresenter maximFeedPresenter;
     private MaximFeedAdapter maximFeedAdapter;
     private List<Maxim> maximList;
@@ -41,6 +50,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         messageTextView = (TextView) findViewById(R.id.messageTextView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.floatingActionButton);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -48,6 +58,46 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
 
         maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
         maximList = new ArrayList<>();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.maxim_feed_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                maximFeedAdapter.filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                maximFeedAdapter.filter(newText);
+                return true;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener()
+        {
+            @Override
+            public boolean onClose()
+            {
+                // Filter by empty string so that all maxims are displayed
+                maximFeedAdapter.filter("");
+                return false;
+            }
+        });
+
+        return true;
     }
 
     @Override
@@ -129,6 +179,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         }
         else
         {
+            maximFeedAdapter.resetVisibleList();
             maximFeedAdapter.notifyDataSetChanged();
         }
 
