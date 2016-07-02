@@ -5,7 +5,6 @@ import android.content.Context;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,14 +16,11 @@ public class MaximFeedPresenter
 {
     private Context context;
     private MaximFeed maximFeed;
-    private List<Maxim> maximList;
 
     public MaximFeedPresenter(Context context, MaximFeed maximFeed)
     {
         this.context = context.getApplicationContext();
         this.maximFeed = maximFeed;
-
-        maximList = new ArrayList<>();
     }
 
     public void onResume()
@@ -36,8 +32,6 @@ public class MaximFeedPresenter
             @Override
             public void onMaximsLoaded(List<Maxim> loadedMaximList)
             {
-                maximList.clear();
-
                 if (loadedMaximList == null)
                 {
                     maximFeed.showLoadingError();
@@ -48,8 +42,7 @@ public class MaximFeedPresenter
                 }
                 else
                 {
-                    maximList.addAll(loadedMaximList);
-                    maximFeed.showMaxims(maximList);
+                    maximFeed.showMaxims(loadedMaximList);
                 }
             }
         });

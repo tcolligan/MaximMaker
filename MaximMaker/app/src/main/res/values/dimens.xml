@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="half_default_margin">8dp</dimen>
+    <dimen name="feed_fab_padding">82dp</dimen>
 </resources>

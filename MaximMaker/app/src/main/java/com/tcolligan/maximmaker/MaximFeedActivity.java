@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.tcolligan.maximmaker.data.Maxim;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeed
@@ -19,6 +20,8 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     private TextView messageTextView;
     private RecyclerView recyclerView;
     private MaximFeedPresenter maximFeedPresenter;
+    private MaximFeedAdapter maximFeedAdapter;
+    private List<Maxim> maximList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,8 +35,10 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new MaximFeedItemDecorator());
 
         maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
+        maximList = new ArrayList<>();
     }
 
     @Override
@@ -61,6 +66,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     public void showEmptyState()
     {
         messageTextView.setText(R.string.no_maxims_text);
+
         progressBar.setVisibility(View.GONE);
         messageTextView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -70,6 +76,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     public void showLoadingError()
     {
         messageTextView.setText(R.string.error_loading_maxims_text);
+
         progressBar.setVisibility(View.GONE);
         messageTextView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -78,8 +85,21 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     @Override
     public void showMaxims(List<Maxim> maximList)
     {
+        this.maximList.clear();
+        this.maximList.addAll(maximList);
+
+        if (maximFeedAdapter == null)
+        {
+            maximFeedAdapter = new MaximFeedAdapter(this.maximList);
+            recyclerView.setAdapter(maximFeedAdapter);
+        }
+        else
+        {
+            maximFeedAdapter.notifyDataSetChanged();
+        }
+
         progressBar.setVisibility(View.GONE);
         messageTextView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }

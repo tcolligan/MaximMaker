@@ -1,5 +1,7 @@
 package com.tcolligan.maximmaker.data;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +23,7 @@ public class Maxim
     private static final String KEY_AUTHOR = "kAuthor";
     private static final String KEY_TAGS = "kTags";
     private static final String KEY_CREATION_TIMESTAMP = "kCreationTimestamp";
-    private static final String TO_STRING_SEPARATOR = ", ";
+    private static final String TO_STRING_SEPARATOR = "\n\n";
 
     private String message;
     private String author;
@@ -86,6 +88,11 @@ public class Maxim
         return creationTimestamp;
     }
 
+    public String getTagsCommaSeparated()
+    {
+        return TextUtils.join(",", tagsList);
+    }
+
     public JSONObject toJSONObject() throws JSONException
     {
         JSONObject jsonObject = new JSONObject();
@@ -117,6 +124,7 @@ public class Maxim
     @Override
     public String toString()
     {
+        // For debugging only
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(message);
@@ -140,7 +148,7 @@ public class Maxim
                 }
                 else
                 {
-                    stringBuilder.append(tag);
+                    stringBuilder.append(getTagsCommaSeparated());
                     stringBuilder.append(TO_STRING_SEPARATOR);
                 }
             }
