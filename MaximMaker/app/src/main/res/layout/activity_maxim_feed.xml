@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="@dimen/spacing_margin"
+        android:layout_margin="@dimen/default_margin"
         android:text="@string/no_maxims_text"
         android:textColor="@color/primaryText"
         android:textStyle="bold"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/spacing_margin"
+        android:layout_margin="@dimen/default_margin"
         android:onClick="onAddMaximButtonClicked"
         android:src="@drawable/ic_add_white_24dp"/>
 </RelativeLayout>
