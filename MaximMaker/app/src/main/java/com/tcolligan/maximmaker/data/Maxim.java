@@ -90,7 +90,7 @@ public class Maxim
 
     public String getTagsCommaSeparated()
     {
-        return TextUtils.join(",", tagsList);
+        return TextUtils.join(", ", tagsList);
     }
 
     public JSONObject toJSONObject() throws JSONException
