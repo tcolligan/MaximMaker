@@ -14,6 +14,6 @@
     <!-- Add Maxim Screen -->
     <string name="quote_hint">Maxim or Quote</string>
     <string name="author_hint">Author or Source</string>
-    <string name="tags_hint">Tags</string>
+    <string name="tags_hint">Comma separated Tags</string>
     <string name="add_maxim_error_text">You must add a maxim or quote!</string>
 </resources>
