@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A singleton that keeps track of all the user's Maxims.
@@ -52,6 +53,7 @@ public class MaximManager
                 {
                     maximsList.clear();
                     maximsList.addAll(loadedMaximsList);
+                    Log.d(TAG, String.format(Locale.US, "Loaded %d maxim(s)", loadedMaximsList.size()));
 
                     if (maximsLoadedListener != null)
                     {
@@ -59,13 +61,14 @@ public class MaximManager
                     }
                 }
             }
-        });
+        }).execute();
     }
 
     public void saveMaxims(Context context)
     {
         // Copy ArrayList into array to avoid ConcurrentModifications
         Maxim[] maximsToSaveArray = maximsList.toArray(new Maxim[maximsList.size()]);
+        Log.d(TAG, String.format(Locale.US, "Saving %d maxim(s)", maximsList.size()));
 
         new SaveMaximsAsyncTask(context, FILE_NAME, maximsToSaveArray, new SaveMaximsAsyncTask.SaveMaximsListener()
         {
@@ -77,7 +80,7 @@ public class MaximManager
                     Log.e(TAG, "Error saving maxims to file: " + FILE_NAME);
                 }
             }
-        });
+        }).execute();
     }
 
     public void addAndSaveMaxim(Context context, Maxim maxim)
