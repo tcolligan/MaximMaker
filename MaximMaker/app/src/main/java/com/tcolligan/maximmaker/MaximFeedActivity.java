@@ -73,7 +73,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
             @Override
             public boolean onQueryTextSubmit(String query)
             {
-                return false;
+                return true;
             }
 
             @Override

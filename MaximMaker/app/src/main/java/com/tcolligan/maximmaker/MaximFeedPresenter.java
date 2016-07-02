@@ -1,14 +1,12 @@
 package com.tcolligan.maximmaker;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A presenter class to handle some of the logic for {@link MaximFeedActivity}
@@ -33,7 +31,6 @@ public class MaximFeedPresenter
 
     public void onResume(String searchText, boolean isSearching)
     {
-        Log.d("TESTER", String.format(Locale.ENGLISH, "Text: %s isSearching: %s", searchText, Boolean.toString(isSearching)));
         if (didShowLoadingState)
         {
             if (isSearching)
@@ -71,7 +68,6 @@ public class MaximFeedPresenter
 
     public void onSearchForText(String text)
     {
-        Log.d("TESTER", text);
         if (text.isEmpty())
         {
             maximFeed.showMaxims(maximManager.getMaximList());
