@@ -3,6 +3,10 @@
     <string name="app_name">MaximMaker</string>
     <string name="menu_label_done">Done</string>
 
+    <!-- Maxim Feed Screen -->
+    <string name="no_maxims_text">You do not have any maxims saved. Try adding one!</string>
+    <string name="error_loading_maxims_text">Error loading Maxims!</string>
+
     <!-- Add Maxim Screen -->
     <string name="quote_hint">Maxim or Quote</string>
     <string name="author_hint">Author or Source</string>

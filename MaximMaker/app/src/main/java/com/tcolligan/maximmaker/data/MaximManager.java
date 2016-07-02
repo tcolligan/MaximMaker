@@ -20,7 +20,7 @@ public class MaximManager
     private static final String TAG = "MaximManager";
     private static final String FILE_NAME = "saved_maxims.json";
     private static final MaximManager instance = new MaximManager();
-    private final List<Maxim> maximsList;
+    private final List<Maxim> maximList;
 
     public static MaximManager getInstance()
     {
@@ -29,7 +29,7 @@ public class MaximManager
 
     public MaximManager()
     {
-        maximsList = new ArrayList<>();
+        maximList = new ArrayList<>();
     }
 
     public void loadMaxims(Context context, final MaximsLoadedListener maximsLoadedListener)
@@ -43,22 +43,17 @@ public class MaximManager
                 {
                     // Getting a null result back means something went horribly wrong
                     Log.e(TAG, "Error loading maxims from file: " + FILE_NAME);
-
-                    if (maximsLoadedListener != null)
-                    {
-                        maximsLoadedListener.onMaximsLoaded(false);
-                    }
                 }
                 else
                 {
-                    maximsList.clear();
-                    maximsList.addAll(loadedMaximsList);
+                    maximList.clear();
+                    maximList.addAll(loadedMaximsList);
                     Log.d(TAG, String.format(Locale.US, "Loaded %d maxim(s)", loadedMaximsList.size()));
+                }
 
-                    if (maximsLoadedListener != null)
-                    {
-                        maximsLoadedListener.onMaximsLoaded(true);
-                    }
+                if (maximsLoadedListener != null)
+                {
+                    maximsLoadedListener.onMaximsLoaded(maximList);
                 }
             }
         }).execute();
@@ -67,8 +62,8 @@ public class MaximManager
     public void saveMaxims(Context context)
     {
         // Copy ArrayList into array to avoid ConcurrentModifications
-        Maxim[] maximsToSaveArray = maximsList.toArray(new Maxim[maximsList.size()]);
-        Log.d(TAG, String.format(Locale.US, "Saving %d maxim(s)", maximsList.size()));
+        Maxim[] maximsToSaveArray = maximList.toArray(new Maxim[maximList.size()]);
+        Log.d(TAG, String.format(Locale.US, "Saving %d maxim(s)", maximList.size()));
 
         new SaveMaximsAsyncTask(context, FILE_NAME, maximsToSaveArray, new SaveMaximsAsyncTask.SaveMaximsListener()
         {
@@ -85,17 +80,17 @@ public class MaximManager
 
     public void addAndSaveMaxim(Context context, Maxim maxim)
     {
-        maximsList.add(maxim);
+        maximList.add(maxim);
         saveMaxims(context);
     }
 
-    public List<Maxim> getMaximsList()
+    public List<Maxim> getMaximList()
     {
-        return maximsList;
+        return maximList;
     }
 
     public interface MaximsLoadedListener
     {
-        void onMaximsLoaded(boolean success);
+        void onMaximsLoaded(List<Maxim> loadedMaximList);
     }
 }
