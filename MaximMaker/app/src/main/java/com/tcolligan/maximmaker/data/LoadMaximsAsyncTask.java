@@ -74,7 +74,7 @@ public class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
         }
         catch (Exception e)
         {
-            // Something went wrong
+            // Something went really wrong just now...
             Log.w(TAG, e);
             return null;
         }
