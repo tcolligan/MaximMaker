@@ -40,19 +40,19 @@ public class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
     {
         File file = new File(context.getFilesDir(), fileName);
 
-        // Make sure the file exists before we save to it
-        if (!file.exists())
-        {
-            boolean success = file.mkdirs();
-
-            if (!success)
-            {
-                return false;
-            }
-        }
-
         try
         {
+            // Make sure the file exists before we save to it
+            if (!file.exists())
+            {
+                boolean success = file.createNewFile();
+
+                if (!success)
+                {
+                    return false;
+                }
+            }
+
             // Take our Maxim data and turn it into JSON data
             JSONArray jsonArray = new JSONArray();
 
