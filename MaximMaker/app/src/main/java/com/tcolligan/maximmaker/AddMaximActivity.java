@@ -17,6 +17,13 @@ import com.tcolligan.maximmaker.data.MaximManager;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * An activity that allows users to add their own custom Maxims.
+ *
+ * Created on 5/30/2016.
+ *
+ * @author Thomas Colligan
+ */
 public class AddMaximActivity extends AppCompatActivity
 {
     private static final String TAG = "AddMaximActivity";
