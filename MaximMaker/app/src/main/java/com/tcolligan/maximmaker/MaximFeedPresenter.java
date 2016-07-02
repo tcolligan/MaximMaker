@@ -41,18 +41,7 @@ public class MaximFeedPresenter
             @Override
             public void onMaximsLoaded(List<Maxim> loadedMaximList)
             {
-                if (loadedMaximList == null)
-                {
-                    maximFeed.showLoadingError();
-                }
-                else if (loadedMaximList.size() == 0)
-                {
-                    maximFeed.showEmptyState();
-                }
-                else
-                {
-                    maximFeed.showMaxims(loadedMaximList);
-                }
+                showMaxims(loadedMaximList);
             }
         });
     }
@@ -60,7 +49,23 @@ public class MaximFeedPresenter
     public void onDeleteMaxim(Maxim maxim)
     {
         MaximManager.getInstance().deleteMaxim(context, maxim);
-        maximFeed.showMaxims(maximManager.getMaximList());
+        showMaxims(maximManager.getMaximList());
+    }
+
+    private void showMaxims(List<Maxim> maximList)
+    {
+        if (maximList == null)
+        {
+            maximFeed.showLoadingError();
+        }
+        else if (maximList.size() == 0)
+        {
+            maximFeed.showEmptyState();
+        }
+        else
+        {
+            maximFeed.showMaxims(maximList);
+        }
     }
 
     public interface MaximFeed
