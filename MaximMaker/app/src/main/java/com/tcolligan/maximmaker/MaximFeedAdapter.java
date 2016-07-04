@@ -33,7 +33,8 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     public MaximViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.card_view_maxim, parent, false);
+                .inflate(R.layout.card_view_maxim, parent, false);
+
         return new MaximViewHolder(view);
     }
 
@@ -43,7 +44,6 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
         final Maxim maxim = maximList.get(position);
 
         holder.messageTextView.setText(maxim.getMessage());
-
         if (maxim.hasAuthor())
         {
             holder.authorTextView.setText(String.format(Locale.getDefault(), "- %s", maxim.getAuthor()));
