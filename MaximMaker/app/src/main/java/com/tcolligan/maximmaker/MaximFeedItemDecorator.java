@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
+ * An ItemDecoration used for the RecyclerView in {@link MaximFeedActivity}
+ *
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
