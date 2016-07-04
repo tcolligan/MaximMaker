@@ -1,6 +1,8 @@
 package com.tcolligan.maximmaker;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
@@ -64,6 +66,19 @@ public class MaximFeedPresenter
                 }
             });
         }
+    }
+
+    public void onAddMaximButtonClicked(Activity activity)
+    {
+        Intent intent = new Intent(activity, AddMaximActivity.class);
+        activity.startActivity(intent);
+    }
+
+    public void onEditMaxim(Activity activity, Maxim maxim)
+    {
+        Intent intent = new Intent(activity, AddMaximActivity.class);
+        intent.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_UUID, maxim.getUuid());
+        activity.startActivity(intent);
     }
 
     public void onDeleteMaxim(Maxim maxim)

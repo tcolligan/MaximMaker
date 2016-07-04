@@ -18,26 +18,50 @@ import java.util.List;
  */
 public class AddMaximPresenter
 {
-    private static final String TAG = "AddMaximPresenter";
+    private static final String TAGS_SEPARATOR = ",";
     private Context context;
     private AddMaximView addMaximView;
+    private Maxim maximToEdit;
+    private MaximManager maximManager;
 
     public AddMaximPresenter(Context context, AddMaximView addMaximView)
     {
         this.context = context.getApplicationContext();
         this.addMaximView = addMaximView;
+        this.maximManager = MaximManager.getInstance();
+    }
+
+    public void onMaximToEditUuidFound(String maximToEditUuid)
+    {
+        if (maximToEditUuid != null)
+        {
+            maximToEdit = maximManager.findMaximWithUuid(maximToEditUuid);
+            addMaximView.showMaxim(maximToEdit);
+        }
+    }
+
+    public boolean isEditingMaxim()
+    {
+        return maximToEdit != null;
     }
 
     public void onDoneClicked(String maxim, String author, String tags)
     {
-
         if (TextUtils.isEmpty(maxim))
         {
             addMaximView.showAddMaximErrorDialog();
             return;
         }
 
-        saveNewMaxim(maxim, author, tags);
+        if (maximToEdit == null)
+        {
+            saveNewMaxim(maxim, author, tags);
+        }
+        else
+        {
+            saveEditedMaxim(maxim, author, tags);
+        }
+
         addMaximView.finish();
     }
 
@@ -53,11 +77,36 @@ public class AddMaximPresenter
             author = null;
         }
 
+        Maxim maxim = new Maxim(message, author, tagsToList(tags));
+        maximManager.addAndSaveMaxim(context, maxim);
+    }
+
+    private void saveEditedMaxim(String message, String author, String tags)
+    {
+        if (TextUtils.isEmpty(message))
+        {
+            return;
+        }
+
+        if (TextUtils.isEmpty(author))
+        {
+            author = null;
+        }
+
+        maximToEdit.setMessage(message);
+        maximToEdit.setAuthor(author);
+        maximToEdit.setTagsList(tagsToList(tags));
+
+        maximManager.saveMaxims(context);
+    }
+
+    private static List<String> tagsToList(String tags)
+    {
         List<String> tagsList = null;
 
         if (!TextUtils.isEmpty(tags))
         {
-            String[] tagArray = tags.split(",");
+            String[] tagArray = tags.split(TAGS_SEPARATOR);
 
             for (int i = 0; i < tagArray.length; i++)
             {
@@ -67,12 +116,12 @@ public class AddMaximPresenter
             tagsList = Arrays.asList(tagArray);
         }
 
-        Maxim maxim = new Maxim(message, author, tagsList);
-        MaximManager.getInstance().addAndSaveMaxim(context, maxim);
+        return tagsList;
     }
 
     public interface AddMaximView
     {
+        void showMaxim(Maxim maxim);
         void showAddMaximErrorDialog();
         void finish();
     }

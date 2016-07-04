@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.tcolligan.maximmaker.data.Maxim;
+
 /**
  * An activity that allows users to add their own custom Maxims.
  *
@@ -18,7 +20,7 @@ import android.widget.EditText;
  */
 public class AddMaximActivity extends AppCompatActivity implements AddMaximPresenter.AddMaximView
 {
-    public static final String KEY_MAXIM_UUID = "kMaximUuid";
+    public static final String KEY_EDIT_MAXIM_UUID = "kEditMaximUuid";
 
     private EditText maximEditText;
     private EditText authorEditText;
@@ -44,6 +46,15 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
         }
 
         addMaximPresenter = new AddMaximPresenter(getApplicationContext(), this);
+
+        // Users can also edit an existing maxim if the want
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null)
+        {
+            String uuid = extras.getString(KEY_EDIT_MAXIM_UUID);
+            addMaximPresenter.onMaximToEditUuidFound(uuid);
+        }
     }
 
     @Override
@@ -51,6 +62,7 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.add_maxim_menu, menu);
+
         return true;
     }
 
@@ -60,11 +72,15 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
         switch (item.getItemId())
         {
             case android.R.id.home:
+            {
                 onBackPressed();
                 return true;
+            }
             case R.id.done:
+            {
                 onDoneClicked();
                 return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -84,6 +100,22 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
         String tags = tagsEditText.getText().toString();
 
         addMaximPresenter.onDoneClicked(maxim, author, tags);
+    }
+
+    @Override
+    public void showMaxim(Maxim maxim)
+    {
+        maximEditText.setText(maxim.getMessage());
+
+        if (maxim.hasAuthor())
+        {
+            authorEditText.setText(maxim.getAuthor());
+        }
+
+        if (maxim.hasTags())
+        {
+            tagsEditText.setText(maxim.getTagsCommaSeparated());
+        }
     }
 
     @Override

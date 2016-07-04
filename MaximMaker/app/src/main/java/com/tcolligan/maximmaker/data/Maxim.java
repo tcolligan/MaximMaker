@@ -80,14 +80,29 @@ public class Maxim
         return uuid;
     }
 
+    public void setMessage(String message)
+    {
+        this.message = message;
+    }
+
     public String getMessage()
     {
         return message;
     }
 
+    public void setAuthor(String author)
+    {
+        this.author = author;
+    }
+
     public String getAuthor()
     {
         return author;
+    }
+
+    public void setTagsList(List<String> tagsList)
+    {
+        this.tagsList = tagsList;
     }
 
     public List<String> getTagsList()

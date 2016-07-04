@@ -94,6 +94,19 @@ public class MaximManager
         }
     }
 
+    public Maxim findMaximWithUuid(String uuid)
+    {
+        for (Maxim maxim : maximList)
+        {
+            if (maxim.getUuid().equals(uuid))
+            {
+                return maxim;
+            }
+        }
+
+        return null;
+    }
+
     public List<Maxim> getMaximList()
     {
         return maximList;
