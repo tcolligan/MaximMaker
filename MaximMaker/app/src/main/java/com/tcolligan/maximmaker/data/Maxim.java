@@ -23,7 +23,8 @@ public class Maxim
     private static final String KEY_AUTHOR = "kAuthor";
     private static final String KEY_TAGS = "kTags";
     private static final String KEY_CREATION_TIMESTAMP = "kCreationTimestamp";
-    private static final String TO_STRING_SEPARATOR = "\n\n";
+    private static final String COMMA_SEPARATOR = ", ";
+    private static final String TO_STRING_SEPARATOR = " | ";
 
     private String message;
     private String author;
@@ -42,7 +43,7 @@ public class Maxim
     {
         message = jsonObject.getString(KEY_MESSAGE);
         author = jsonObject.optString(KEY_AUTHOR, null);
-        creationTimestamp = jsonObject.getInt(KEY_CREATION_TIMESTAMP);
+        creationTimestamp = jsonObject.getLong(KEY_CREATION_TIMESTAMP);
 
         JSONArray tagsArray = jsonObject.optJSONArray(KEY_TAGS);
 
@@ -90,7 +91,7 @@ public class Maxim
 
     public String getTagsCommaSeparated()
     {
-        return TextUtils.join(", ", tagsList);
+        return TextUtils.join(COMMA_SEPARATOR, tagsList);
     }
 
     public JSONObject toJSONObject() throws JSONException
@@ -149,11 +150,11 @@ public class Maxim
                 else
                 {
                     stringBuilder.append(getTagsCommaSeparated());
-                    stringBuilder.append(TO_STRING_SEPARATOR);
                 }
             }
         }
 
+        stringBuilder.append(TO_STRING_SEPARATOR);
         stringBuilder.append(new Date(creationTimestamp).toString());
 
         return stringBuilder.toString();
