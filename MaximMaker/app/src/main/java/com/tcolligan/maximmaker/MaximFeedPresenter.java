@@ -1,7 +1,6 @@
 package com.tcolligan.maximmaker;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
