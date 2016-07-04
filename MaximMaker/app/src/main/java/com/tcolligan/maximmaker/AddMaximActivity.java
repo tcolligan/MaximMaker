@@ -4,18 +4,10 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
-
-import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.data.MaximManager;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * An activity that allows users to add their own custom Maxims.
@@ -24,12 +16,15 @@ import java.util.List;
  *
  * @author Thomas Colligan
  */
-public class AddMaximActivity extends AppCompatActivity
+public class AddMaximActivity extends AppCompatActivity implements AddMaximPresenter.AddMaximView
 {
-    private static final String TAG = "AddMaximActivity";
+    public static final String KEY_MAXIM_UUID = "kMaximUuid";
+
     private EditText maximEditText;
     private EditText authorEditText;
     private EditText tagsEditText;
+
+    private AddMaximPresenter addMaximPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,6 +42,8 @@ public class AddMaximActivity extends AppCompatActivity
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        addMaximPresenter = new AddMaximPresenter(getApplicationContext(), this);
     }
 
     @Override
@@ -73,54 +70,24 @@ public class AddMaximActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        addMaximPresenter = null;
+    }
+
     private void onDoneClicked()
     {
         String maxim = maximEditText.getText().toString();
         String author = authorEditText.getText().toString();
         String tags = tagsEditText.getText().toString();
 
-        if (TextUtils.isEmpty(maxim))
-        {
-            showAddMaximErrorDialog();
-            return;
-        }
-
-        saveNewMaxim(maxim, author, tags);
-        finish();
+        addMaximPresenter.onDoneClicked(maxim, author, tags);
     }
 
-    private void saveNewMaxim(String message, String author, String tags)
-    {
-        if (TextUtils.isEmpty(message))
-        {
-            return;
-        }
-
-        if (TextUtils.isEmpty(author))
-        {
-            author = null;
-        }
-
-        List<String> tagsList = null;
-
-        if (!TextUtils.isEmpty(tags))
-        {
-            String[] tagArray = tags.split(",");
-
-            for (int i = 0; i < tagArray.length; i++)
-            {
-                tagArray[i] = tagArray[i].trim();
-            }
-
-            tagsList = Arrays.asList(tagArray);
-        }
-
-        Maxim maxim = new Maxim(message, author, tagsList);
-        MaximManager.getInstance().addAndSaveMaxim(getApplicationContext(), maxim);
-        Log.d(TAG, "Added maxim: " + maxim.toString());
-    }
-
-    private void showAddMaximErrorDialog()
+    @Override
+    public void showAddMaximErrorDialog()
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.add_maxim_error_text)
