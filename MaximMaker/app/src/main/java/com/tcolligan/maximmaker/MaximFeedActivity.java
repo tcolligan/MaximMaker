@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @author Thomas Colligan
  */
-public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeed, MaximFeedAdapter.MaximFeedListener
+public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeed, MaximFeedAdapter.MaximViewHolderListener
 {
     private ProgressBar progressBar;
     private TextView messageTextView;

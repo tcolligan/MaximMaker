@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.tcolligan.maximmaker.data.Maxim;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,12 +21,12 @@ import java.util.Locale;
 public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
 {
     private List<Maxim> maximList;
-    private MaximFeedListener maximFeedListener;
+    private MaximViewHolderListener maximViewHolderListener;
 
-    public MaximFeedAdapter(List<Maxim> maximList, MaximFeedListener maximFeedListener)
+    public MaximFeedAdapter(List<Maxim> maximList, MaximViewHolderListener maximViewHolderListener)
     {
         this.maximList = maximList;
-        this.maximFeedListener = maximFeedListener;
+        this.maximViewHolderListener = maximViewHolderListener;
     }
 
     @Override
@@ -70,9 +69,9 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
             @Override
             public boolean onLongClick(View v)
             {
-                if (maximFeedListener != null)
+                if (maximViewHolderListener != null)
                 {
-                    maximFeedListener.onLongClick(maxim);
+                    maximViewHolderListener.onLongClick(maxim);
                 }
 
                 return true;
@@ -104,7 +103,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
         }
     }
 
-    public interface MaximFeedListener
+    public interface MaximViewHolderListener
     {
         void onLongClick(Maxim maxim);
     }
