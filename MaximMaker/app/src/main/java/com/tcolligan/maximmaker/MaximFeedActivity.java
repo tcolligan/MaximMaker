@@ -79,7 +79,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
             @Override
             public boolean onQueryTextChange(String newText)
             {
-                maximFeedPresenter.onSearchForText(newText);
+                maximFeedPresenter.onSearch(newText);
                 return true;
             }
         });
@@ -89,6 +89,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
             @Override
             public boolean onMenuItemActionExpand(MenuItem item)
             {
+                maximFeedPresenter.onSearchOpened();
                 return true;
             }
 
@@ -107,10 +108,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     public void onResume()
     {
         super.onResume();
-
-        String currentSearch = searchView == null ? "" : searchView.getQuery().toString();
-        boolean isSearching = searchView != null && !searchView.isIconified();
-        maximFeedPresenter.onResume(currentSearch, isSearching);
+        maximFeedPresenter.onResume();
     }
 
     @Override
