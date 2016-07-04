@@ -17,8 +17,8 @@
     <string name="delete_button_text">Delete</string>
 
     <!-- Add Maxim Screen -->
-    <string name="quote_hint">Maxim or quote</string>
-    <string name="author_hint">Author or source</string>
+    <string name="maxim_hint">Maxim</string>
+    <string name="author_hint">Author</string>
     <string name="tags_hint">Tags</string>
     <string name="add_maxim_error_text">You must add a maxim or quote!</string>
 </resources>
