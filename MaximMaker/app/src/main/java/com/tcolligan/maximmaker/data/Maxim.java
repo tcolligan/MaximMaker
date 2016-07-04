@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A model that represents a specific maxim or quote.
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class Maxim
 {
+    private static final String KEY_UUID = "kUuid";
     private static final String KEY_MESSAGE = "kMessage";
     private static final String KEY_AUTHOR = "kAuthor";
     private static final String KEY_TAGS = "kTags";
@@ -26,6 +28,7 @@ public class Maxim
     private static final String COMMA_SEPARATOR = ", ";
     private static final String TO_STRING_SEPARATOR = " | ";
 
+    private String uuid;
     private String message;
     private String author;
     private List<String> tagsList;
@@ -36,11 +39,14 @@ public class Maxim
         this.message = message;
         this.author = author;
         this.tagsList = tagsList;
+
+        this.uuid = UUID.randomUUID().toString();
         this.creationTimestamp = System.currentTimeMillis();
     }
 
     public Maxim(JSONObject jsonObject) throws JSONException
     {
+        uuid = jsonObject.getString(KEY_UUID);
         message = jsonObject.getString(KEY_MESSAGE);
         author = jsonObject.optString(KEY_AUTHOR, null);
         creationTimestamp = jsonObject.getLong(KEY_CREATION_TIMESTAMP);
@@ -67,6 +73,11 @@ public class Maxim
     public boolean hasTags()
     {
         return tagsList != null;
+    }
+
+    public String getUuid()
+    {
+        return uuid;
     }
 
     public String getMessage()
@@ -98,6 +109,7 @@ public class Maxim
     {
         JSONObject jsonObject = new JSONObject();
 
+        jsonObject.put(KEY_UUID, uuid);
         jsonObject.put(KEY_MESSAGE, message);
 
         if (author != null)
@@ -127,6 +139,9 @@ public class Maxim
     {
         // For debugging only
         StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(uuid);
+        stringBuilder.append(TO_STRING_SEPARATOR);
 
         stringBuilder.append(message);
         stringBuilder.append(TO_STRING_SEPARATOR);
