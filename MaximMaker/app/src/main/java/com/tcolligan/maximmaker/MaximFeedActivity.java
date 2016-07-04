@@ -2,7 +2,6 @@ package com.tcolligan.maximmaker;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +32,6 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     private ProgressBar progressBar;
     private TextView messageTextView;
     private RecyclerView recyclerView;
-    private SearchView searchView;
 
     private MaximFeedPresenter maximFeedPresenter;
     private MaximFeedAdapter maximFeedAdapter;
@@ -64,7 +62,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         inflater.inflate(R.menu.maxim_feed_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
         {
@@ -118,16 +116,14 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
 
     public void onAddMaximButtonClicked(View v)
     {
-        Intent intent = new Intent(this, AddMaximActivity.class);
-        startActivity(intent);
+        maximFeedPresenter.onAddMaximButtonClicked(this);
     }
 
-    @Override
-    public void onLongClick(final Maxim maxim)
+    private void showDeleteConfirmationDialog(final Maxim maxim)
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.delete_maxim_dialog_message)
-                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener()
+                .setPositiveButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
@@ -136,6 +132,31 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
+                .create()
+                .show();
+    }
+
+    @Override
+    public void onLongClick(final Maxim maxim)
+    {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.edit_of_delete_maxim_message)
+                .setPositiveButton(R.string.edit_button_text, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        maximFeedPresenter.onEditMaxim(MaximFeedActivity.this, maxim);
+                    }
+                })
+                .setNegativeButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        showDeleteConfirmationDialog(maxim);
+                    }
+                })
                 .create()
                 .show();
     }
