@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.ui.addscreen;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -16,13 +16,13 @@ import java.util.List;
  *
  * @author Thomas Colligan
  */
-public class AddMaximPresenter
+class AddMaximPresenter
 {
     private static final String TAGS_SEPARATOR = ",";
-    private Context context;
-    private AddMaximView addMaximView;
+    private final Context context;
+    private final AddMaximView addMaximView;
+    private final MaximManager maximManager;
     private Maxim maximToEdit;
-    private MaximManager maximManager;
 
     public AddMaximPresenter(Context context, AddMaximView addMaximView)
     {
@@ -38,11 +38,6 @@ public class AddMaximPresenter
             maximToEdit = maximManager.findMaximWithUuid(maximToEditUuid);
             addMaximView.showMaxim(maximToEdit);
         }
-    }
-
-    public boolean isEditingMaxim()
-    {
-        return maximToEdit != null;
     }
 
     public void onDoneClicked(String maxim, String author, String tags)

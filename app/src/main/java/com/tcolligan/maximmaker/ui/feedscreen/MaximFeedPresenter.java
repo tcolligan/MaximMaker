@@ -1,9 +1,10 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
 
@@ -17,11 +18,11 @@ import java.util.List;
  *
  * @author Thomas Colligan
  */
-public class MaximFeedPresenter
+class MaximFeedPresenter
 {
-    private Context context;
-    private MaximFeed maximFeed;
-    private MaximManager maximManager;
+    private final Context context;
+    private final MaximFeed maximFeed;
+    private final MaximManager maximManager;
     private boolean didShowLoadingState;
 
     private String searchText;

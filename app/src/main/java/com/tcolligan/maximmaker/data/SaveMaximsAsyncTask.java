@@ -16,21 +16,18 @@ import java.io.FileOutputStream;
  *
  * @author Thomas Colligan
  */
-public class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
+class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
 {
     private static final String TAG = "SaveMaximsAsyncTask";
     private final Context context;
-    private final String fileName;
     private final Maxim[] maximsToSaveArray;
     private final SaveMaximsListener saveMaximsListener;
 
     public SaveMaximsAsyncTask(Context context,
-                               String fileName,
                                Maxim[] maximsToSaveArray,
                                SaveMaximsListener saveMaximsListener)
     {
         this.context = context;
-        this.fileName = fileName;
         this.maximsToSaveArray = maximsToSaveArray;
         this.saveMaximsListener = saveMaximsListener;
     }
@@ -38,7 +35,7 @@ public class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
     @Override
     protected Boolean doInBackground(Void... params)
     {
-        File file = new File(context.getFilesDir(), fileName);
+        File file = new File(context.getFilesDir(), MaximManager.SAVED_MAXIMS_JSON_FILE_NAME);
 
         try
         {

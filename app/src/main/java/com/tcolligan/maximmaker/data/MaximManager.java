@@ -17,8 +17,8 @@ import java.util.Locale;
  */
 public class MaximManager
 {
+    public static final String SAVED_MAXIMS_JSON_FILE_NAME = "saved_maxims.json";
     private static final String TAG = "MaximManager";
-    private static final String FILE_NAME = "saved_maxims.json";
     private static final MaximManager instance = new MaximManager();
     private final List<Maxim> maximList;
 
@@ -27,14 +27,14 @@ public class MaximManager
         return instance;
     }
 
-    public MaximManager()
+    private MaximManager()
     {
         maximList = new ArrayList<>();
     }
 
     public void loadMaxims(Context context, final MaximsLoadedListener maximsLoadedListener)
     {
-        new LoadMaximsAsyncTask(context, FILE_NAME, new LoadMaximsAsyncTask.LoadMaximsListener()
+        new LoadMaximsAsyncTask(context, new LoadMaximsAsyncTask.LoadMaximsListener()
         {
             @Override
             public void onMaximsLoaded(List<Maxim> loadedMaximsList)
@@ -42,7 +42,7 @@ public class MaximManager
                 if (loadedMaximsList == null)
                 {
                     // Getting a null result back means something went horribly wrong
-                    Log.e(TAG, "Error loading maxims from file: " + FILE_NAME);
+                    Log.e(TAG, "Error loading maxims from file: " + SAVED_MAXIMS_JSON_FILE_NAME);
                 }
                 else
                 {
@@ -65,14 +65,14 @@ public class MaximManager
         Maxim[] maximsToSaveArray = maximList.toArray(new Maxim[maximList.size()]);
         Log.d(TAG, String.format(Locale.US, "Saving %d maxim(s)", maximList.size()));
 
-        new SaveMaximsAsyncTask(context, FILE_NAME, maximsToSaveArray, new SaveMaximsAsyncTask.SaveMaximsListener()
+        new SaveMaximsAsyncTask(context, maximsToSaveArray, new SaveMaximsAsyncTask.SaveMaximsListener()
         {
             @Override
             public void onMaximsSaved(boolean success)
             {
                 if (!success)
                 {
-                    Log.e(TAG, "Error saving maxims to file: " + FILE_NAME);
+                    Log.e(TAG, "Error saving maxims to file: " + SAVED_MAXIMS_JSON_FILE_NAME);
                 }
             }
         }).execute();

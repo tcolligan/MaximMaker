@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         messageTextView = (TextView) findViewById(R.id.messageTextView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
+        assert recyclerView != null;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new MaximFeedItemDecorator());
@@ -114,6 +116,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         maximFeedPresenter = null;
     }
 
+    @SuppressWarnings("UnusedParameters")
     public void onAddMaximButtonClicked(View v)
     {
         maximFeedPresenter.onAddMaximButtonClicked(this);

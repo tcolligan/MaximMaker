@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 
 import java.util.List;
@@ -20,8 +21,8 @@ import java.util.Locale;
  */
 public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
 {
-    private List<Maxim> maximList;
-    private MaximViewHolderListener maximViewHolderListener;
+    private final List<Maxim> maximList;
+    private final MaximViewHolderListener maximViewHolderListener;
 
     public MaximFeedAdapter(List<Maxim> maximList, MaximViewHolderListener maximViewHolderListener)
     {
@@ -87,10 +88,10 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
 
     public static class MaximViewHolder extends RecyclerView.ViewHolder
     {
-        public View rootView;
-        public TextView messageTextView;
-        public TextView authorTextView;
-        public TextView tagsTextView;
+        public final View rootView;
+        public final TextView messageTextView;
+        public final TextView authorTextView;
+        public final TextView tagsTextView;
 
         public MaximViewHolder(View rootView)
         {

@@ -7,7 +7,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -15,7 +16,7 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context=".AddMaximActivity">
+            tools:context=".ui.addscreen.AddMaximActivity">
 
             <EditText
                 android:id="@+id/maximEditText"

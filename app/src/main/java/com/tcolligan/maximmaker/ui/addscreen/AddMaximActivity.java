@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.ui.addscreen;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 
 /**

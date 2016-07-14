@@ -20,24 +20,22 @@ import java.util.List;
  *
  * @author Thomas Colligan
  */
-public class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
+class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
 {
     private static final String TAG = "LoadMaximsAsyncTask";
     private final Context context;
-    private final String fileName;
     private final LoadMaximsListener loadMaximsListener;
 
-    public LoadMaximsAsyncTask(Context context, String fileName, LoadMaximsListener loadMaximsListener)
+    public LoadMaximsAsyncTask(Context context, LoadMaximsListener loadMaximsListener)
     {
         this.context = context;
-        this.fileName = fileName;
         this.loadMaximsListener = loadMaximsListener;
     }
 
     @Override
     protected List<Maxim> doInBackground(Void... params)
     {
-        File file = new File(context.getFilesDir(), fileName);
+        File file = new File(context.getFilesDir(), MaximManager.SAVED_MAXIMS_JSON_FILE_NAME);
         List<Maxim> loadedMaximsList = new ArrayList<>();
 
         try
@@ -69,7 +67,7 @@ public class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
             }
             else
             {
-                Log.d(TAG, fileName + " does not exist");
+                Log.d(TAG, MaximManager.SAVED_MAXIMS_JSON_FILE_NAME + " does not exist");
             }
         }
         catch (Exception e)

@@ -1,8 +1,10 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.tcolligan.maximmaker.R;
 
 /**
  * An ItemDecoration used for the RecyclerView in {@link MaximFeedActivity}
@@ -11,7 +13,7 @@ import android.view.View;
  *
  * @author Thomas Colligan
  */
-public class MaximFeedItemDecorator extends RecyclerView.ItemDecoration
+class MaximFeedItemDecorator extends RecyclerView.ItemDecoration
 {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
