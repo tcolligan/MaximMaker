@@ -2,6 +2,7 @@ package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,27 +18,28 @@ import android.widget.TextView;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
+import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * An activity that displays all of the Maxims that the user has saved in a feed style UI.
- *
+ * <p/>
  * Created on 5/30/2016.
  *
  * @author Thomas Colligan
  */
-public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeed, MaximFeedAdapter.MaximViewHolderListener
+public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeedView
 {
+    //region Class Properties
     private ProgressBar progressBar;
     private TextView messageTextView;
     private RecyclerView recyclerView;
-
-    private MaximFeedPresenter maximFeedPresenter;
     private MaximFeedAdapter maximFeedAdapter;
-    private List<Maxim> maximList;
+    private MaximFeedPresenter maximFeedPresenter;
+    //endregion
 
+    //region Life-Cycle Methods
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -54,7 +56,8 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         recyclerView.addItemDecoration(new MaximFeedItemDecorator());
 
         maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
-        maximList = new ArrayList<>();
+        maximFeedAdapter = new MaximFeedAdapter(maximFeedPresenter);
+        recyclerView.setAdapter(maximFeedAdapter);
     }
 
     @Override
@@ -115,55 +118,18 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         super.onDestroy();
         maximFeedPresenter = null;
     }
+    //endregion
 
+
+    //region Button onClick Methods
     @SuppressWarnings("UnusedParameters")
     public void onAddMaximButtonClicked(View v)
     {
-        maximFeedPresenter.onAddMaximButtonClicked(this);
+        maximFeedPresenter.onAddMaximButtonClicked();
     }
+    //endregion
 
-    private void showDeleteConfirmationDialog(final Maxim maxim)
-    {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.delete_maxim_dialog_message)
-                .setPositiveButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        maximFeedPresenter.onDeleteMaxim(maxim);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .create()
-                .show();
-    }
-
-    @Override
-    public void onLongClick(final Maxim maxim)
-    {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.edit_of_delete_maxim_message)
-                .setPositiveButton(R.string.edit_button_text, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        maximFeedPresenter.onEditMaxim(MaximFeedActivity.this, maxim);
-                    }
-                })
-                .setNegativeButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        showDeleteConfirmationDialog(maxim);
-                    }
-                })
-                .create()
-                .show();
-    }
-
+    //region MapFeedView Implementation
     @Override
     public void showLoadingState()
     {
@@ -195,21 +161,70 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     @Override
     public void showMaxims(List<Maxim> maximList)
     {
-        this.maximList.clear();
-        this.maximList.addAll(maximList);
-
-        if (maximFeedAdapter == null)
-        {
-            maximFeedAdapter = new MaximFeedAdapter(this.maximList, this);
-            recyclerView.setAdapter(maximFeedAdapter);
-        }
-        else
-        {
-            maximFeedAdapter.notifyDataSetChanged();
-        }
+        maximFeedAdapter.setMaximList(maximList);
+        maximFeedAdapter.notifyDataSetChanged();
 
         progressBar.setVisibility(View.GONE);
         messageTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void showEditOrDeleteMaximDialog(final Maxim maxim)
+    {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.edit_of_delete_maxim_message)
+                .setPositiveButton(R.string.edit_button_text, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        maximFeedPresenter.onEditMaxim(maxim);
+                    }
+                })
+                .setNegativeButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        maximFeedPresenter.onDeleteMaxim(maxim);
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    @Override
+    public void showConfirmMaximDeletionDialog(final Maxim maxim)
+    {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.delete_maxim_dialog_message)
+                .setPositiveButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        maximFeedPresenter.onDeleteMaximConfirmed(maxim);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .create()
+                .show();
+    }
+
+    @Override
+    public void showAddMaximScreen()
+    {
+        Intent intent = new Intent(this, AddMaximActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showEditMaximScreen(Maxim maximToEdit)
+    {
+        Intent intent = new Intent(this, AddMaximActivity.class);
+        intent.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_UUID, maximToEdit.getUuid());
+        startActivity(intent);
+    }
+    //endregion
 }

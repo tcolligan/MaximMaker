@@ -1,41 +1,43 @@
 package com.tcolligan.maximmaker.ui.feedscreen;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
-import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
+import com.tcolligan.maximmaker.ui.feedscreen.MaximFeedAdapter.MaximViewHolderListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A presenter class to handle some of the logic for {@link MaximFeedActivity}
- *
+ * <p/>
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
  */
-class MaximFeedPresenter
+class MaximFeedPresenter implements MaximViewHolderListener
 {
+    //region Class Properties
     private final Context context;
-    private final MaximFeed maximFeed;
+    private final MaximFeedView maximFeedView;
     private final MaximManager maximManager;
     private boolean didShowLoadingState;
-
     private String searchText;
     private boolean isSearching;
+    //endregion
 
-    public MaximFeedPresenter(Context context, MaximFeed maximFeed)
+    //region Constructor
+    public MaximFeedPresenter(Context context, MaximFeedView maximFeedView)
     {
         this.context = context.getApplicationContext();
-        this.maximFeed = maximFeed;
+        this.maximFeedView = maximFeedView;
         this.maximManager = MaximManager.getInstance();
         this.searchText = "";
     }
+    //endregion
 
+    //region Presenter Action Methods
     public void onResume()
     {
         if (didShowLoadingState)
@@ -55,7 +57,7 @@ class MaximFeedPresenter
             // The initial loading screen gets shown the first time onResume is called.
             // It will probably load super fast, so the user wont see it.
             // But it if the user has a lot of maxims to load, it will be helpful then.
-            maximFeed.showLoadingState();
+            maximFeedView.showLoadingState();
             didShowLoadingState = true;
 
             maximManager.loadMaxims(context, new MaximManager.MaximsLoadedListener()
@@ -69,22 +71,24 @@ class MaximFeedPresenter
         }
     }
 
-    public void onAddMaximButtonClicked(Activity activity)
+    public void onAddMaximButtonClicked()
     {
-        Intent intent = new Intent(activity, AddMaximActivity.class);
-        activity.startActivity(intent);
+        maximFeedView.showAddMaximScreen();
     }
 
-    public void onEditMaxim(Activity activity, Maxim maxim)
+    public void onEditMaxim(Maxim maxim)
     {
-        Intent intent = new Intent(activity, AddMaximActivity.class);
-        intent.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_UUID, maxim.getUuid());
-        activity.startActivity(intent);
+        maximFeedView.showEditMaximScreen(maxim);
     }
 
     public void onDeleteMaxim(Maxim maxim)
     {
-        MaximManager.getInstance().deleteMaxim(context, maxim);
+        maximFeedView.showConfirmMaximDeletionDialog(maxim);
+    }
+
+    public void onDeleteMaximConfirmed(Maxim maximToDelete)
+    {
+        MaximManager.getInstance().deleteMaxim(context, maximToDelete);
         showMaximsWithFeedStates(maximManager.getMaximList());
     }
 
@@ -93,7 +97,7 @@ class MaximFeedPresenter
         // While searching, we do not want any of the empty or error states in the list to show.
         // So even if there are now maxims in the list, just show an empty list.
         isSearching = true;
-        maximFeed.showMaxims(maximManager.getMaximList());
+        maximFeedView.showMaxims(maximManager.getMaximList());
     }
 
     public void onSearch(String searchText)
@@ -107,7 +111,7 @@ class MaximFeedPresenter
 
         if (searchText.isEmpty())
         {
-            maximFeed.showMaxims(maximManager.getMaximList());
+            maximFeedView.showMaxims(maximManager.getMaximList());
         }
         else
         {
@@ -120,7 +124,9 @@ class MaximFeedPresenter
         isSearching = false;
         showMaximsWithFeedStates(maximManager.getMaximList());
     }
+    //endregion
 
+    //region MaximFeedView Helper Methods
     private void showMaximsForSearchText()
     {
         List<Maxim> searchResults = new ArrayList<>();
@@ -136,30 +142,52 @@ class MaximFeedPresenter
             }
         }
 
-        maximFeed.showMaxims(searchResults);
+        maximFeedView.showMaxims(searchResults);
     }
 
     private void showMaximsWithFeedStates(List<Maxim> maximList)
     {
         if (maximList == null)
         {
-            maximFeed.showLoadingError();
+            maximFeedView.showLoadingError();
         }
         else if (maximList.size() == 0)
         {
-            maximFeed.showEmptyState();
+            maximFeedView.showEmptyState();
         }
         else
         {
-            maximFeed.showMaxims(maximList);
+            maximFeedView.showMaxims(maximList);
         }
     }
+    //endregion
 
-    public interface MaximFeed
+    //region MaximViewHolderListener Implementation
+    @Override
+    public void onLongClick(final Maxim maxim)
+    {
+        maximFeedView.showEditOrDeleteMaximDialog(maxim);
+    }
+    //endregion
+
+    //region MaximFeedView Interface
+    public interface MaximFeedView
     {
         void showLoadingState();
+
         void showEmptyState();
+
         void showLoadingError();
+
         void showMaxims(List<Maxim> maximList);
+
+        void showEditOrDeleteMaximDialog(Maxim maxim);
+
+        void showConfirmMaximDeletionDialog(Maxim maxim);
+
+        void showAddMaximScreen();
+
+        void showEditMaximScreen(Maxim maximToEdit);
     }
+    //endregion
 }
