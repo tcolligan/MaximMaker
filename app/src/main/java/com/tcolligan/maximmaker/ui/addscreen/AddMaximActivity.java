@@ -77,9 +77,9 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
                 onBackPressed();
                 return true;
             }
-            case R.id.done:
+            case R.id.save:
             {
-                onDoneClicked();
+                onSaveClicked();
                 return true;
             }
             default:
@@ -94,13 +94,13 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
         addMaximPresenter = null;
     }
 
-    private void onDoneClicked()
+    private void onSaveClicked()
     {
         String maxim = maximEditText.getText().toString();
         String author = authorEditText.getText().toString();
         String tags = tagsEditText.getText().toString();
 
-        addMaximPresenter.onDoneClicked(maxim, author, tags);
+        addMaximPresenter.onSaveClicked(maxim, author, tags);
     }
 
     @Override

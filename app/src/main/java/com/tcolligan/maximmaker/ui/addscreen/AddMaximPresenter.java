@@ -40,7 +40,7 @@ class AddMaximPresenter
         }
     }
 
-    public void onDoneClicked(String maxim, String author, String tags)
+    public void onSaveClicked(String maxim, String author, String tags)
     {
         if (TextUtils.isEmpty(maxim))
         {
