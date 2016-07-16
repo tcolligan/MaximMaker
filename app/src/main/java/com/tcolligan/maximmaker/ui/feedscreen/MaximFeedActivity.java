@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * An activity that displays all of the Maxims that the user has saved in a feed style UI.
- * <p/>
+ * <p>
  * Created on 5/30/2016.
  *
  * @author Thomas Colligan

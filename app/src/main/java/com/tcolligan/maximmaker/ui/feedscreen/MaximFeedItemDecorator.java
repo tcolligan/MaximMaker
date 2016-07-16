@@ -8,7 +8,7 @@ import com.tcolligan.maximmaker.R;
 
 /**
  * An ItemDecoration used for the RecyclerView in {@link MaximFeedActivity}
- * <p/>
+ * <p>
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan

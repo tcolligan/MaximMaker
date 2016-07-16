@@ -15,7 +15,7 @@ import java.util.Locale;
 
 /**
  * An adapter used to display CardViews with Maxims on the in {@link MaximFeedActivity}
- * <p/>
+ * <p>
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
