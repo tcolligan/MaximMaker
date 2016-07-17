@@ -1,4 +1,7 @@
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:locale="en">
+
     <!-- General Strings -->
     <string name="app_name">MaximMaker</string>
 
