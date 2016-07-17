@@ -18,21 +18,28 @@ import java.util.Locale;
  */
 public class MaximManager
 {
+    //region Class Properties
     public static final String SAVED_MAXIMS_JSON_FILE_NAME = "saved_maxims.json";
     private static final String TAG = "MaximManager";
     private static final MaximManager instance = new MaximManager();
     private final List<Maxim> maximList;
+    //endregion
 
+    //region Static Class Methods
     public static MaximManager getInstance()
     {
         return instance;
     }
+    //endregion
 
+    //region Constructor
     private MaximManager()
     {
         maximList = new ArrayList<>();
     }
+    //endregion
 
+    //region Load, Save, Add, & Delete Methods
     public void loadMaxims(Context context, final MaximsLoadedListener maximsLoadedListener)
     {
         new LoadMaximsAsyncTask(context, new LoadMaximsAsyncTask.LoadMaximsListener()
@@ -94,7 +101,9 @@ public class MaximManager
             saveMaxims(context);
         }
     }
+    //endregion
 
+    //region Class Instance Methods
     public Maxim findMaximWithUuid(String uuid)
     {
         for (Maxim maxim : maximList)
@@ -112,9 +121,12 @@ public class MaximManager
     {
         return maximList;
     }
+    //endregion
 
+    //region MaximsLoadListener Interface
     public interface MaximsLoadedListener
     {
         void onMaximsLoaded(List<Maxim> loadedMaximList);
     }
+    //endregion
 }

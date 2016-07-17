@@ -12,7 +12,7 @@ import java.util.Locale;
 
 /**
  * A presenter class to handle some of the logic for {@link MaximFeedActivity}
- * <p>
+ * <p/>
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan

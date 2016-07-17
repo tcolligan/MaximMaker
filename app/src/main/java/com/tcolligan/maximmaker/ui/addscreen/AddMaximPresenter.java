@@ -11,26 +11,31 @@ import java.util.List;
 
 /**
  * A presenter class to handle some of the logic for {@link AddMaximActivity}
- *
+ * <p/>
  * Created on 7/4/2016.
  *
  * @author Thomas Colligan
  */
 class AddMaximPresenter
 {
+    //region Class Properties
     private static final String TAGS_SEPARATOR = ",";
     private final Context context;
     private final AddMaximView addMaximView;
     private final MaximManager maximManager;
     private Maxim maximToEdit;
+    //endregion
 
+    //region Constructor
     public AddMaximPresenter(Context context, AddMaximView addMaximView)
     {
         this.context = context.getApplicationContext();
         this.addMaximView = addMaximView;
         this.maximManager = MaximManager.getInstance();
     }
+    //endregion
 
+    //region Presenter Action Methods
     public void onMaximToEditUuidFound(String maximToEditUuid)
     {
         if (maximToEditUuid != null)
@@ -59,7 +64,9 @@ class AddMaximPresenter
 
         addMaximView.finish();
     }
+    //endregion
 
+    //region Class Instance Methods
     private void saveNewMaxim(String message, String author, String tags)
     {
         if (TextUtils.isEmpty(message))
@@ -94,7 +101,9 @@ class AddMaximPresenter
 
         maximManager.saveMaxims(context);
     }
+    //endregion
 
+    //region Helper Methods
     private static List<String> tagsToList(String tags)
     {
         List<String> tagsList = null;
@@ -113,11 +122,16 @@ class AddMaximPresenter
 
         return tagsList;
     }
+    //endregion
 
+    //region AddMaximView Interface
     public interface AddMaximView
     {
         void showMaxim(Maxim maxim);
+
         void showAddMaximErrorDialog();
+
         void finish();
     }
+    //endregion
 }
