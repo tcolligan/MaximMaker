@@ -2,7 +2,8 @@ package com.tcolligan.maximmaker.data;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
+import com.tcolligan.maximmaker.utils.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,7 +16,7 @@ import java.util.List;
 
 /**
  * An AsyncTask that loads maxims from a json file.
- *
+ * <p/>
  * Created on 6/5/2016.
  *
  * @author Thomas Colligan
@@ -67,13 +68,13 @@ class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
             }
             else
             {
-                Log.d(TAG, MaximManager.SAVED_MAXIMS_JSON_FILE_NAME + " does not exist");
+                LogUtils.d(TAG, MaximManager.SAVED_MAXIMS_JSON_FILE_NAME + " does not exist");
             }
         }
         catch (Exception e)
         {
             // Something went really wrong just now...
-            Log.w(TAG, e);
+            LogUtils.w(TAG, e);
             return null;
         }
 

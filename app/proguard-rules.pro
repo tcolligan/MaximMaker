@@ -16,15 +16,10 @@
 #   public *;
 #}
 
+# We don't want our code to be obfuscated.
+# It is in a public GitHub Repository so obfuscation would be pointless.
+-dontobfuscate
+
 # Proguard was eating this class since it was only referenced via XML.
 # But we actually need it for the search in this app.
 -keep class android.support.v7.widget.SearchView { *; }
-
-# --------------------------------------------------------------------
-# REMOVE all Log messages except warnings and errors
-# --------------------------------------------------------------------
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-    public static *** v(...);
-    public static *** i(...);
-}

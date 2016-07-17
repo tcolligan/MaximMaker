@@ -1,7 +1,8 @@
 package com.tcolligan.maximmaker.data;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.tcolligan.maximmaker.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Locale;
 /**
  * A singleton that keeps track of all the user's Maxims.
  * Handles saving them to disk and loading them from disk.
- *
+ * <p/>
  * Created on 5/30/2016.
  *
  * @author Thomas Colligan
@@ -42,13 +43,13 @@ public class MaximManager
                 if (loadedMaximsList == null)
                 {
                     // Getting a null result back means something went horribly wrong
-                    Log.e(TAG, "Error loading maxims from file: " + SAVED_MAXIMS_JSON_FILE_NAME);
+                    LogUtils.e(TAG, "Error loading maxims from file: " + SAVED_MAXIMS_JSON_FILE_NAME);
                 }
                 else
                 {
                     maximList.clear();
                     maximList.addAll(loadedMaximsList);
-                    Log.d(TAG, String.format(Locale.US, "Loaded %d maxim(s)", loadedMaximsList.size()));
+                    LogUtils.d(TAG, String.format(Locale.US, "Loaded %d maxim(s)", loadedMaximsList.size()));
                 }
 
                 if (maximsLoadedListener != null)
@@ -63,7 +64,7 @@ public class MaximManager
     {
         // Copy ArrayList into array to avoid ConcurrentModifications
         Maxim[] maximsToSaveArray = maximList.toArray(new Maxim[maximList.size()]);
-        Log.d(TAG, String.format(Locale.US, "Saving %d maxim(s)", maximList.size()));
+        LogUtils.d(TAG, String.format(Locale.US, "Saving %d maxim(s)", maximList.size()));
 
         new SaveMaximsAsyncTask(context, maximsToSaveArray, new SaveMaximsAsyncTask.SaveMaximsListener()
         {
@@ -72,7 +73,7 @@ public class MaximManager
             {
                 if (!success)
                 {
-                    Log.e(TAG, "Error saving maxims to file: " + SAVED_MAXIMS_JSON_FILE_NAME);
+                    LogUtils.e(TAG, "Error saving maxims to file: " + SAVED_MAXIMS_JSON_FILE_NAME);
                 }
             }
         }).execute();

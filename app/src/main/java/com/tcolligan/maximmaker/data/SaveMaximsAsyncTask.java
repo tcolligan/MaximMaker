@@ -2,7 +2,8 @@ package com.tcolligan.maximmaker.data;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
+import com.tcolligan.maximmaker.utils.LogUtils;
 
 import org.json.JSONArray;
 
@@ -67,7 +68,7 @@ class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
         }
         catch (Exception e)
         {
-            Log.w(TAG, e);
+            LogUtils.w(TAG, e);
         }
 
         return false;
