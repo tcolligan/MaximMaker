@@ -8,4 +8,4 @@ android:
     - extra-android-m2repository
 
 script:
-   - ./gradlew clean assembleDebug
+   - ./gradlew clean assembleStaging
