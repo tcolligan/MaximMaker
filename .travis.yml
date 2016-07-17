@@ -8,9 +8,10 @@ android:
     - build-tools-24.0.0
     - android-24
     - extra-android-m2repository
-before_install:
-  - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
-  - export JAVA_HOME=$JAVA8_HOME
+branches:
+  only:
+    - master
+    - development
 script:
    - ./gradlew clean assembleStaging
    - ./gradlew app:check
