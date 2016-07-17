@@ -1,0 +1,17 @@
+// Add lint to the default gradle check task.
+check.dependsOn 'lint'
+
+// Force lint to run whenever we build.
+// Specify where lint should pull its rules from.
+// Specify where lint should output its reports to.
+android {
+    lintOptions {
+        warningsAsErrors true
+        abortOnError true
+        xmlReport false
+        htmlReport true
+        lintConfig file("${project.rootDir}/config/quality/lint/lint.xml")
+        htmlOutput file("$project.buildDir/reports/lint/lint-result.html")
+        xmlOutput file("$project.buildDir/reports/lint/lint-result.xml")
+    }
+}
