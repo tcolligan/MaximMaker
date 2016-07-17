@@ -11,13 +11,31 @@ android {
         versionCode 2
         versionName "1.0.1"
     }
+    signingConfigs {
+        release {
+            storeFile file("/../../../Keystores/maxim_maker_release_keystore.jks")
+            storePassword System.getenv("KSTOREPWD")
+            keyAlias "maximmaker"
+            keyPassword System.getenv("KEYPWD")
+        }
+    }
     buildTypes {
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        staging {
+            initWith release
+            debuggable true
+            applicationIdSuffix ".staging"
+        }
+
         debug {
             applicationIdSuffix ".debug"
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
