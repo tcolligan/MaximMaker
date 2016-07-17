@@ -23,16 +23,21 @@ import java.util.List;
  */
 class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
 {
+    //region Class Properties
     private static final String TAG = "LoadMaximsAsyncTask";
     private final Context context;
     private final LoadMaximsListener loadMaximsListener;
+    //endregion
 
+    //region Constructor
     public LoadMaximsAsyncTask(Context context, LoadMaximsListener loadMaximsListener)
     {
         this.context = context;
         this.loadMaximsListener = loadMaximsListener;
     }
+    //endregion
 
+    //region AsyncTask Methods
     @Override
     protected List<Maxim> doInBackground(Void... params)
     {
@@ -89,9 +94,12 @@ class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
             loadMaximsListener.onMaximsLoaded(loadedMaximsList);
         }
     }
+    //endregion
 
+    //region LoadMaximsListener Interface
     public interface LoadMaximsListener
     {
         void onMaximsLoaded(List<Maxim> loadedMaximsList);
     }
+    //endregion
 }
