@@ -13,7 +13,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("/../../../Keystores/maxim_maker_release_keystore.jks")
+            storeFile file("../maxim_maker_release_keystore.jks")
             storePassword System.getenv("KSTOREPWD")
             keyAlias "maximmaker"
             keyPassword System.getenv("KEYPWD")
@@ -24,13 +24,14 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 
         staging {
             initWith release
             debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-staging.pro'
             applicationIdSuffix ".staging"
         }
 
