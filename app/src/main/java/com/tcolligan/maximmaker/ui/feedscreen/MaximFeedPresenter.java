@@ -8,6 +8,7 @@ import com.tcolligan.maximmaker.ui.feedscreen.MaximFeedAdapter.MaximViewHolderLi
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A presenter class to handle some of the logic for {@link MaximFeedActivity}
@@ -129,14 +130,15 @@ class MaximFeedPresenter implements MaximViewHolderListener
     //region MaximFeedView Helper Methods
     private void showMaximsForSearchText()
     {
+        Locale defaultLocale = Locale.getDefault();
         List<Maxim> searchResults = new ArrayList<>();
-        searchText = searchText.toLowerCase();
+        searchText = searchText.toLowerCase(defaultLocale);
 
         for (Maxim maxim : maximManager.getMaximList())
         {
-            if (maxim.getMessage().toLowerCase().contains(searchText) ||
-                    (maxim.hasAuthor() && maxim.getAuthor().toLowerCase().contains(searchText)) ||
-                    (maxim.hasTags() && maxim.getTagsCommaSeparated().toLowerCase().contains(searchText)))
+            if (maxim.getMessage().toLowerCase(defaultLocale).contains(searchText) ||
+                    (maxim.hasAuthor() && maxim.getAuthor().toLowerCase(defaultLocale).contains(searchText)) ||
+                    (maxim.hasTags() && maxim.getTagsCommaSeparated().toLowerCase(defaultLocale).contains(searchText)))
             {
                 searchResults.add(maxim);
             }
