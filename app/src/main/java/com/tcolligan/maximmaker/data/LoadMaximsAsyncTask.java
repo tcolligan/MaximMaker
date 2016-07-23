@@ -16,28 +16,35 @@ import java.util.List;
 
 /**
  * An AsyncTask that loads maxims from a json file.
- * <p/>
+ * <p>
  * Created on 6/5/2016.
  *
  * @author Thomas Colligan
  */
 class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
 {
-    //region Class Properties
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private static final String TAG = "LoadMaximsAsyncTask";
     private final Context context;
     private final LoadMaximsListener loadMaximsListener;
-    //endregion
 
-    //region Constructor
+    //==============================================================================================
+    // Constructor
+    //==============================================================================================
+
     public LoadMaximsAsyncTask(Context context, LoadMaximsListener loadMaximsListener)
     {
         this.context = context;
         this.loadMaximsListener = loadMaximsListener;
     }
-    //endregion
 
-    //region AsyncTask Methods
+    //==============================================================================================
+    // AsyncTask Methods
+    //==============================================================================================
+
     @Override
     protected List<Maxim> doInBackground(Void... params)
     {
@@ -94,12 +101,14 @@ class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
             loadMaximsListener.onMaximsLoaded(loadedMaximsList);
         }
     }
-    //endregion
 
-    //region LoadMaximsListener Interface
+    //==============================================================================================
+    // LoadMaximsListener Interface
+    //==============================================================================================
+
     public interface LoadMaximsListener
     {
         void onMaximsLoaded(List<Maxim> loadedMaximsList);
     }
-    //endregion
+
 }

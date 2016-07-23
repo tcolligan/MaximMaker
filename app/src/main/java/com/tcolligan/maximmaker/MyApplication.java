@@ -4,14 +4,16 @@ import android.app.Application;
 
 /**
  * Overridden Application Class, used for initial app loading.
- * <p/>
+ * <p>
  * Created on 7/13/2016.
  *
  * @author Thomas Colligan
  */
 public class MyApplication extends Application
 {
-    //region Lif-cycle Methods
+    //==============================================================================================
+    // Life-cycle Methods
+    //==============================================================================================
     @Override
     public void onCreate()
     {
@@ -19,5 +21,5 @@ public class MyApplication extends Application
 
         // TODO: Load crash logger and analytics
     }
-    //endregion
+
 }

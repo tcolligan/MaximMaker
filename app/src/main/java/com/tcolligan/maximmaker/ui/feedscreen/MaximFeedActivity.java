@@ -31,15 +31,20 @@ import java.util.List;
  */
 public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeedView
 {
-    //region Class Properties
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private ProgressBar progressBar;
     private TextView messageTextView;
     private RecyclerView recyclerView;
     private MaximFeedAdapter maximFeedAdapter;
     private MaximFeedPresenter maximFeedPresenter;
-    //endregion
 
-    //region Life-Cycle Methods
+    //==============================================================================================
+    // Life-Cycle Methods
+    //==============================================================================================
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -118,18 +123,21 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         super.onDestroy();
         maximFeedPresenter = null;
     }
-    //endregion
 
+    //==============================================================================================
+    // Button onClick Methods
+    //==============================================================================================
 
-    //region Button onClick Methods
     @SuppressWarnings("UnusedParameters")
     public void onAddMaximButtonClicked(View v)
     {
         maximFeedPresenter.onAddMaximButtonClicked();
     }
-    //endregion
 
-    //region MapFeedView Implementation
+    //==============================================================================================
+    // MapFeedView Implementation
+    //==============================================================================================
+
     @Override
     public void showLoadingState()
     {
@@ -226,5 +234,5 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         intent.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_UUID, maximToEdit.getUuid());
         startActivity(intent);
     }
-    //endregion
+
 }

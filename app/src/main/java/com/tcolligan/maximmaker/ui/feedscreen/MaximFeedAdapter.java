@@ -15,34 +15,43 @@ import java.util.Locale;
 
 /**
  * An adapter used to display CardViews with Maxims on the in {@link MaximFeedActivity}
- * <p/>
+ * <p>
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
  */
 public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
 {
-    //region Class Properties
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private List<Maxim> maximList;
     private final MaximViewHolderListener maximViewHolderListener;
-    //endregion
 
-    //region Constructor
+    //==============================================================================================
+    // Constructor
+    //==============================================================================================
+
     public MaximFeedAdapter(MaximViewHolderListener maximViewHolderListener)
     {
         this.maximList = new ArrayList<>();
         this.maximViewHolderListener = maximViewHolderListener;
     }
-    //endregion
 
-    //region Class Instance Methods
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
+
     public void setMaximList(List<Maxim> maximList)
     {
         this.maximList = maximList;
     }
-    //endregion
 
-    //region RecyclerView.Adapter Methods
+    //==============================================================================================
+    // RecyclerView.Adapter Methods
+    //==============================================================================================
+
     @Override
     public MaximViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
@@ -98,9 +107,11 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     {
         return maximList.size();
     }
-    //endregion
 
-    //region MaximViewHolder Class
+    //==============================================================================================
+    // MaximViewHolder Class
+    //==============================================================================================
+
     public static class MaximViewHolder extends RecyclerView.ViewHolder
     {
         public final View rootView;
@@ -118,12 +129,14 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
             tagsTextView = (TextView) rootView.findViewById(R.id.tagsTextView);
         }
     }
-    //endregion
 
-    //region MaximViewHolderListener Interface
+    //==============================================================================================
+    // MaximViewHolderListener Interface
+    //==============================================================================================
+
     public interface MaximViewHolderListener
     {
         void onLongClick(Maxim maxim);
     }
-    //endregion
+
 }

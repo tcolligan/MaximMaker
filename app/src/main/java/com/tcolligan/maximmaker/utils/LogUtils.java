@@ -7,10 +7,10 @@ import com.tcolligan.maximmaker.BuildConfig;
 /**
  * A logging utility class that should be used in place of the standard
  * {@link android.util.Log} class.
- * <p/>
+ * <p>
  * This class makes sure that only error and warning logs are printed out
  * for release builds.
- * <p/>
+ * <p>
  * Created on 7/17/2016.
  *
  * @author Thomas Colligan
@@ -18,14 +18,18 @@ import com.tcolligan.maximmaker.BuildConfig;
 @SuppressWarnings("PointlessBooleanExpression")
 public class LogUtils
 {
-    //region Constructor
+    //==============================================================================================
+    // Constructor
+    //==============================================================================================
+
     private LogUtils()
     {
-        // Private constructor to make sure that nobody can instantiate this class.
+        // Private constructor to make sure that nobody can instantiate this utility class.
     }
-    //endregion
 
-    //region Log Methods
+    //==============================================================================================
+    // Log Methods
+    //==============================================================================================
 
     /**
      * Send a {@link Log#VERBOSE} log message.
@@ -193,5 +197,5 @@ public class LogUtils
     {
         return Log.e(tag, msg, tr);
     }
-    //endregion
+
 }
