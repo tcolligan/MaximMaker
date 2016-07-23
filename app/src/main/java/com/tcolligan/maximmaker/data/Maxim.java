@@ -13,14 +13,17 @@ import java.util.UUID;
 
 /**
  * A model that represents a specific maxim or quote.
- * <p/>
+ * <p>
  * Created on 3/28/2016.
  *
  * @author Thomas Colligan
  */
 public class Maxim
 {
-    //region Class Properties
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private static final String KEY_UUID = "kUuid";
     private static final String KEY_MESSAGE = "kMessage";
     private static final String KEY_AUTHOR = "kAuthor";
@@ -34,9 +37,11 @@ public class Maxim
     private String author;
     private List<String> tagsList;
     private long creationTimestamp;
-    //endregion
 
-    //region Constructors
+    //==============================================================================================
+    // Constructors
+    //==============================================================================================
+
     public Maxim(String message, String author, List<String> tagsList)
     {
         this.message = message;
@@ -68,9 +73,10 @@ public class Maxim
         }
     }
 
-    //endregion
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
 
-    //region Class Instance Methods
     public boolean hasAuthor()
     {
         return author != null;
@@ -195,5 +201,5 @@ public class Maxim
 
         return stringBuilder.toString();
     }
-    //endregion
+
 }

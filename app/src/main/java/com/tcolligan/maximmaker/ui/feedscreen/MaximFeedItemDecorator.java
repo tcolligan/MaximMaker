@@ -8,14 +8,17 @@ import com.tcolligan.maximmaker.R;
 
 /**
  * An ItemDecoration used for the RecyclerView in {@link MaximFeedActivity}
- * <p/>
+ * <p>
  * Created on 7/2/2016.
  *
  * @author Thomas Colligan
  */
 class MaximFeedItemDecorator extends RecyclerView.ItemDecoration
 {
-    //region ItemDecoration Methods
+    //==============================================================================================
+    // ItemDecoration Methods
+    //==============================================================================================
+
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
     {
@@ -35,5 +38,4 @@ class MaximFeedItemDecorator extends RecyclerView.ItemDecoration
             outRect.bottom = (int) view.getContext().getResources().getDimension(R.dimen.half_default_margin);
         }
     }
-    //endregion
 }

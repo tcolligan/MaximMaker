@@ -19,16 +19,21 @@ import java.util.Locale;
  */
 class MaximFeedPresenter implements MaximViewHolderListener
 {
-    //region Class Properties
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private final Context context;
     private final MaximFeedView maximFeedView;
     private final MaximManager maximManager;
     private boolean didShowLoadingState;
     private String searchText;
     private boolean isSearching;
-    //endregion
 
-    //region Constructor
+    //==============================================================================================
+    // Constructor
+    //==============================================================================================
+
     public MaximFeedPresenter(Context context, MaximFeedView maximFeedView)
     {
         this.context = context.getApplicationContext();
@@ -36,9 +41,11 @@ class MaximFeedPresenter implements MaximViewHolderListener
         this.maximManager = MaximManager.getInstance();
         this.searchText = "";
     }
-    //endregion
 
-    //region Presenter Action Methods
+    //==============================================================================================
+    // Presenter Action Methods
+    //==============================================================================================
+
     public void onResume()
     {
         if (didShowLoadingState)
@@ -125,9 +132,11 @@ class MaximFeedPresenter implements MaximViewHolderListener
         isSearching = false;
         showMaximsWithFeedStates(maximManager.getMaximList());
     }
-    //endregion
 
-    //region MaximFeedView Helper Methods
+    //==============================================================================================
+    // MaximFeedView Helper Methods
+    //==============================================================================================
+
     private void showMaximsForSearchText()
     {
         Locale defaultLocale = Locale.getDefault();
@@ -162,17 +171,21 @@ class MaximFeedPresenter implements MaximViewHolderListener
             maximFeedView.showMaxims(maximList);
         }
     }
-    //endregion
 
-    //region MaximViewHolderListener Implementation
+    //==============================================================================================
+    // MaximViewHolderListener Implementation
+    //==============================================================================================
+
     @Override
     public void onLongClick(final Maxim maxim)
     {
         maximFeedView.showEditOrDeleteMaximDialog(maxim);
     }
-    //endregion
 
-    //region MaximFeedView Interface
+    //==============================================================================================
+    // MaximFeedView Interface
+    //==============================================================================================
+
     public interface MaximFeedView
     {
         void showLoadingState();
@@ -191,5 +204,5 @@ class MaximFeedPresenter implements MaximViewHolderListener
 
         void showEditMaximScreen(Maxim maximToEdit);
     }
-    //endregion
+
 }

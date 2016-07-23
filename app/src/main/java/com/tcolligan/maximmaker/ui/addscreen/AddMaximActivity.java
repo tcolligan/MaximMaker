@@ -11,23 +11,30 @@ import android.widget.EditText;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
+import com.tcolligan.maximmaker.ui.addscreen.AddMaximPresenter.AddMaximView;
 
 /**
  * An activity that allows users to add their own custom Maxims.
- *
+ * <p>
  * Created on 5/30/2016.
  *
  * @author Thomas Colligan
  */
-public class AddMaximActivity extends AppCompatActivity implements AddMaximPresenter.AddMaximView
+public class AddMaximActivity extends AppCompatActivity implements AddMaximView
 {
-    public static final String KEY_EDIT_MAXIM_UUID = "kEditMaximUuid";
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
 
+    public static final String KEY_EDIT_MAXIM_UUID = "kEditMaximUuid";
     private EditText maximEditText;
     private EditText authorEditText;
     private EditText tagsEditText;
-
     private AddMaximPresenter addMaximPresenter;
+
+    //==============================================================================================
+    // Life-cycle Methods
+    //==============================================================================================
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -94,6 +101,10 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
         addMaximPresenter = null;
     }
 
+    //==============================================================================================
+    // Button Click Methods
+    //==============================================================================================
+
     private void onSaveClicked()
     {
         String maxim = maximEditText.getText().toString();
@@ -102,6 +113,10 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximPrese
 
         addMaximPresenter.onSaveClicked(maxim, author, tags);
     }
+
+    //==============================================================================================
+    // AddMaximView Implementation Methods
+    //==============================================================================================
 
     @Override
     public void showMaxim(Maxim maxim)

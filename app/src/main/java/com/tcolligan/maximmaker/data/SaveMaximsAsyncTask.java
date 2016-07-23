@@ -12,17 +12,25 @@ import java.io.FileOutputStream;
 
 /**
  * An AsyncTask that saves Maxims to a json file.
- *
+ * <p>
  * Created on 6/5/2016.
  *
  * @author Thomas Colligan
  */
 class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
 {
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private static final String TAG = "SaveMaximsAsyncTask";
     private final Context context;
     private final Maxim[] maximsToSaveArray;
     private final SaveMaximsListener saveMaximsListener;
+
+    //==============================================================================================
+    // Constructor
+    //==============================================================================================
 
     public SaveMaximsAsyncTask(Context context,
                                Maxim[] maximsToSaveArray,
@@ -32,6 +40,10 @@ class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
         this.maximsToSaveArray = maximsToSaveArray;
         this.saveMaximsListener = saveMaximsListener;
     }
+
+    //==============================================================================================
+    // Async Task Methods
+    //==============================================================================================
 
     @Override
     protected Boolean doInBackground(Void... params)
@@ -82,6 +94,10 @@ class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
             saveMaximsListener.onMaximsSaved(success);
         }
     }
+
+    //==============================================================================================
+    // SaveMaximsListener Interface
+    //==============================================================================================
 
     public interface SaveMaximsListener
     {
