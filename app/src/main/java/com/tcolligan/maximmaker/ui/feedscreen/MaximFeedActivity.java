@@ -20,6 +20,7 @@ import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     private RecyclerView recyclerView;
     private MaximFeedAdapter maximFeedAdapter;
     private MaximFeedPresenter maximFeedPresenter;
+    private List<MaximFeedItemViewModel> maximFeedItemViewModelList;
 
     //==============================================================================================
     // Life-Cycle Methods
@@ -51,18 +53,11 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maxim_feed);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        messageTextView = (TextView) findViewById(R.id.messageTextView);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        maximFeedItemViewModelList = new ArrayList<>();
 
-        assert recyclerView != null;
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new MaximFeedItemDecorator());
-
-        maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
-        maximFeedAdapter = new MaximFeedAdapter(maximFeedPresenter);
-        recyclerView.setAdapter(maximFeedAdapter);
+        findAllViews();
+        setupRecyclerView();
+        setupPresenterAndAdapter();
     }
 
     @Override
@@ -74,38 +69,8 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-        {
-            @Override
-            public boolean onQueryTextSubmit(String query)
-            {
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText)
-            {
-                maximFeedPresenter.onSearch(newText);
-                return true;
-            }
-        });
-
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener()
-        {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item)
-            {
-                maximFeedPresenter.onSearchOpened();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item)
-            {
-                maximFeedPresenter.onSearchClosed();
-                return true;
-            }
-        });
+        setupSearchItemListener(searchItem);
+        setupSearchQueryListener(searchView);
 
         return true;
     }
@@ -132,6 +97,71 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     public void onAddMaximButtonClicked(View v)
     {
         maximFeedPresenter.onAddMaximButtonClicked();
+    }
+
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
+
+    private void findAllViews()
+    {
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        messageTextView = (TextView) findViewById(R.id.messageTextView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+    }
+
+    private void setupRecyclerView()
+    {
+        assert recyclerView != null;
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new MaximFeedItemDecorator());
+    }
+
+    private void setupPresenterAndAdapter()
+    {
+        maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
+        maximFeedAdapter = new MaximFeedAdapter(maximFeedPresenter);
+        recyclerView.setAdapter(maximFeedAdapter);
+    }
+
+    private void setupSearchQueryListener(SearchView searchView)
+    {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query)
+            {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                maximFeedPresenter.onSearch(newText);
+                return true;
+            }
+        });
+    }
+
+    private void setupSearchItemListener(MenuItem searchItem)
+    {
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener()
+        {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item)
+            {
+                maximFeedPresenter.onSearchOpened();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item)
+            {
+                maximFeedPresenter.onSearchClosed();
+                return true;
+            }
+        });
     }
 
     //==============================================================================================
@@ -169,7 +199,14 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     @Override
     public void showMaxims(List<Maxim> maximList)
     {
-        maximFeedAdapter.setMaximList(maximList);
+        maximFeedItemViewModelList.clear();
+
+        for (Maxim maxim : maximList)
+        {
+            maximFeedItemViewModelList.add(new MaximFeedItemViewModel(maxim));
+        }
+
+        maximFeedAdapter.setMaximFeedItemViewModelList(maximFeedItemViewModelList);
         maximFeedAdapter.notifyDataSetChanged();
 
         progressBar.setVisibility(View.GONE);

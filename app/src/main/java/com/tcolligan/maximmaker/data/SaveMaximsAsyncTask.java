@@ -3,16 +3,19 @@ package com.tcolligan.maximmaker.data;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.tcolligan.maximmaker.utils.FileUtils;
 import com.tcolligan.maximmaker.utils.LogUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * An AsyncTask that saves Maxims to a json file.
- * <p>
+ * <p/>
  * Created on 6/5/2016.
  *
  * @author Thomas Colligan
@@ -52,29 +55,13 @@ class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
 
         try
         {
-            // Make sure the file exists before we save to it
-            if (!file.exists())
+            if (!FileUtils.createNewFileIfFileDoesNotExist(file))
             {
-                boolean success = file.createNewFile();
-
-                if (!success)
-                {
-                    return false;
-                }
+                return false;
             }
 
-            // Take our Maxim data and turn it into JSON data
-            JSONArray jsonArray = new JSONArray();
-
-            for (Maxim maxim : maximsToSaveArray)
-            {
-                jsonArray.put(maxim.toJSONObject());
-            }
-
-            // Write the JSON as text to a file
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(jsonArray.toString().getBytes());
-            fileOutputStream.close();
+            JSONArray jsonArray = convertMaximArrayToJsonArray(maximsToSaveArray);
+            writeJsonArrayToFile(jsonArray, file);
 
             return true;
         }
@@ -93,6 +80,29 @@ class SaveMaximsAsyncTask extends AsyncTask<Void, Void, Boolean>
         {
             saveMaximsListener.onMaximsSaved(success);
         }
+    }
+
+    //==============================================================================================
+    // Static Class Instance Methods
+    //==============================================================================================
+
+    private static JSONArray convertMaximArrayToJsonArray(Maxim[] maximArray) throws JSONException
+    {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Maxim maxim : maximArray)
+        {
+            jsonArray.put(maxim.toJSONObject());
+        }
+
+        return jsonArray;
+    }
+
+    private static void writeJsonArrayToFile(JSONArray jsonArray, File file) throws IOException
+    {
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        fileOutputStream.write(jsonArray.toString().getBytes());
+        fileOutputStream.close();
     }
 
     //==============================================================================================

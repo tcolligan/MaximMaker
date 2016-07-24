@@ -139,14 +139,14 @@ public class Maxim
         jsonObject.put(KEY_UUID, uuid);
         jsonObject.put(KEY_MESSAGE, message);
 
-        if (author != null)
+        if (hasAuthor())
         {
             jsonObject.put(KEY_AUTHOR, author);
         }
 
         jsonObject.put(KEY_CREATION_TIMESTAMP, creationTimestamp);
 
-        if (tagsList != null)
+        if (hasTags())
         {
             JSONArray jsonArray = new JSONArray();
 
@@ -164,7 +164,6 @@ public class Maxim
     @Override
     public String toString()
     {
-        // For debugging only
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(uuid);
@@ -173,27 +172,15 @@ public class Maxim
         stringBuilder.append(message);
         stringBuilder.append(TO_STRING_SEPARATOR);
 
-        if (author != null)
+        if (hasAuthor())
         {
             stringBuilder.append(author);
             stringBuilder.append(TO_STRING_SEPARATOR);
         }
 
-        if (tagsList != null)
+        if (hasTags())
         {
-            int len = tagsList.size();
-            for (int i = 0; i < len; i++)
-            {
-                String tag = tagsList.get(i);
-                if (i == len - 1)
-                {
-                    stringBuilder.append(tag);
-                }
-                else
-                {
-                    stringBuilder.append(getTagsCommaSeparated());
-                }
-            }
+            stringBuilder.append(getTagsCommaSeparated());
         }
 
         stringBuilder.append(TO_STRING_SEPARATOR);

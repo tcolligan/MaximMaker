@@ -42,27 +42,12 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_maxim);
 
-        maximEditText = (EditText) findViewById(R.id.maximEditText);
-        authorEditText = (EditText) findViewById(R.id.authorEditText);
-        tagsEditText = (EditText) findViewById(R.id.tagsEditText);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-        {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        findViews();
+        setupActionBar();
 
         addMaximPresenter = new AddMaximPresenter(getApplicationContext(), this);
 
-        // Users can also edit an existing maxim if the want
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null)
-        {
-            String uuid = extras.getString(KEY_EDIT_MAXIM_UUID);
-            addMaximPresenter.onMaximToEditUuidFound(uuid);
-        }
+        checkForEditModeMaxim();
     }
 
     @Override
@@ -112,6 +97,38 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         String tags = tagsEditText.getText().toString();
 
         addMaximPresenter.onSaveClicked(maxim, author, tags);
+    }
+
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
+
+    private void findViews()
+    {
+        maximEditText = (EditText) findViewById(R.id.maximEditText);
+        authorEditText = (EditText) findViewById(R.id.authorEditText);
+        tagsEditText = (EditText) findViewById(R.id.tagsEditText);
+    }
+
+    private void setupActionBar()
+    {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+        {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void checkForEditModeMaxim()
+    {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null)
+        {
+            String uuid = extras.getString(KEY_EDIT_MAXIM_UUID);
+            addMaximPresenter.onMaximToEditUuidFound(uuid);
+        }
     }
 
     //==============================================================================================

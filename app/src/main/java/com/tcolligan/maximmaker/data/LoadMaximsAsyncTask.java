@@ -3,20 +3,20 @@ package com.tcolligan.maximmaker.data;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.tcolligan.maximmaker.utils.FileUtils;
 import com.tcolligan.maximmaker.utils.LogUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * An AsyncTask that loads maxims from a json file.
- * <p>
+ * <p/>
  * Created on 6/5/2016.
  *
  * @author Thomas Colligan
@@ -49,34 +49,13 @@ class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
     protected List<Maxim> doInBackground(Void... params)
     {
         File file = new File(context.getFilesDir(), MaximManager.SAVED_MAXIMS_JSON_FILE_NAME);
-        List<Maxim> loadedMaximsList = new ArrayList<>();
 
         try
         {
             if (file.exists())
             {
-                // Read the json text from the file
-                StringBuilder stringBuilder = new StringBuilder();
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String line;
-
-                while ((line = bufferedReader.readLine()) != null)
-                {
-                    stringBuilder.append(line);
-                }
-
-                bufferedReader.close();
-
-                // Convert the text to JSON and Maxim objects
-                JSONArray jsonArray = new JSONArray(stringBuilder.toString());
-                int len = jsonArray.length();
-
-                for (int i = 0; i < len; i++)
-                {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Maxim maxim = new Maxim(jsonObject);
-                    loadedMaximsList.add(maxim);
-                }
+                String fileDataAsString = FileUtils.retrieveFileDataAsText(file);
+                return convertJsonStringToMaximList(fileDataAsString);
             }
             else
             {
@@ -87,10 +66,9 @@ class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
         {
             // Something went really wrong just now...
             LogUtils.w(TAG, e);
-            return null;
         }
 
-        return loadedMaximsList;
+        return null;
     }
 
     @Override
@@ -100,6 +78,26 @@ class LoadMaximsAsyncTask extends AsyncTask<Void, Void, List<Maxim>>
         {
             loadMaximsListener.onMaximsLoaded(loadedMaximsList);
         }
+    }
+
+    //==============================================================================================
+    // Static Class Methods
+    //==============================================================================================
+
+    private static List<Maxim> convertJsonStringToMaximList(String jsonString) throws JSONException
+    {
+        List<Maxim> maximList = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(jsonString);
+        int len = jsonArray.length();
+
+        for (int i = 0; i < len; i++)
+        {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            Maxim maxim = new Maxim(jsonObject);
+            maximList.add(maxim);
+        }
+
+        return maximList;
     }
 
     //==============================================================================================

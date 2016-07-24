@@ -26,7 +26,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     // Class Properties
     //==============================================================================================
 
-    private List<Maxim> maximList;
+    private List<MaximFeedItemViewModel> maximFeedItemViewModelList;
     private final MaximViewHolderListener maximViewHolderListener;
 
     //==============================================================================================
@@ -35,7 +35,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
 
     public MaximFeedAdapter(MaximViewHolderListener maximViewHolderListener)
     {
-        this.maximList = new ArrayList<>();
+        this.maximFeedItemViewModelList = new ArrayList<>();
         this.maximViewHolderListener = maximViewHolderListener;
     }
 
@@ -43,9 +43,9 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     // Class Instance Methods
     //==============================================================================================
 
-    public void setMaximList(List<Maxim> maximList)
+    public void setMaximFeedItemViewModelList(List<MaximFeedItemViewModel> maximFeedItemViewModelList)
     {
-        this.maximList = maximList;
+        this.maximFeedItemViewModelList = maximFeedItemViewModelList;
     }
 
     //==============================================================================================
@@ -61,31 +61,18 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
         return new MaximViewHolder(view);
     }
 
+    @SuppressWarnings("ResourceType")
     @Override
     public void onBindViewHolder(MaximViewHolder holder, int position)
     {
-        final Maxim maxim = maximList.get(position);
+        final MaximFeedItemViewModel maximFeedItemViewModel = maximFeedItemViewModelList.get(position);
 
-        holder.messageTextView.setText(maxim.getMessage());
-        if (maxim.hasAuthor())
-        {
-            holder.authorTextView.setText(String.format(Locale.getDefault(), "- %s", maxim.getAuthor()));
-            holder.authorTextView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            holder.authorTextView.setVisibility(View.GONE);
-        }
+        holder.messageTextView.setText(maximFeedItemViewModel.getMessageText());
+        holder.authorTextView.setText(maximFeedItemViewModel.getAuthorText());
+        holder.tagsTextView.setText(maximFeedItemViewModel.getTagsText());
 
-        if (maxim.hasTags())
-        {
-            holder.tagsTextView.setText(maxim.getTagsCommaSeparated());
-            holder.tagsTextView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            holder.tagsTextView.setVisibility(View.GONE);
-        }
+        holder.authorTextView.setVisibility(maximFeedItemViewModel.getAuthorTextViewVisibility());
+        holder.tagsTextView.setVisibility(maximFeedItemViewModel.getTagsTextViewVisibility());
 
         holder.rootView.setOnLongClickListener(new View.OnLongClickListener()
         {
@@ -94,7 +81,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
             {
                 if (maximViewHolderListener != null)
                 {
-                    maximViewHolderListener.onLongClick(maxim);
+                    maximViewHolderListener.onLongClick(maximFeedItemViewModel.getMaxim());
                 }
 
                 return true;
@@ -105,7 +92,7 @@ public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.Maxi
     @Override
     public int getItemCount()
     {
-        return maximList.size();
+        return maximFeedItemViewModelList.size();
     }
 
     //==============================================================================================
