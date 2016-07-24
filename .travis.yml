@@ -13,4 +13,4 @@ branches:
     - master
     - development
 script:
-   - ./gradlew clean assembleStaging check
+   - ./gradlew clean assembleStaging check --info
