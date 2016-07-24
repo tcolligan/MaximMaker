@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * A presenter class to handle some of the logic for {@link AddMaximActivity}
- * <p>
+ * <p/>
  * Created on 7/4/2016.
  *
  * @author Thomas Colligan
@@ -78,6 +78,10 @@ class AddMaximPresenter
 
     private void saveNewMaxim(String message, String author, String tags)
     {
+        message = message.trim();
+        author = author.trim();
+        tags = tags.trim();
+
         if (TextUtils.isEmpty(message))
         {
             return;
@@ -94,6 +98,10 @@ class AddMaximPresenter
 
     private void saveEditedMaxim(String message, String author, String tags)
     {
+        message = message.trim();
+        author = author.trim();
+        tags = tags.trim();
+
         if (TextUtils.isEmpty(message))
         {
             return;
