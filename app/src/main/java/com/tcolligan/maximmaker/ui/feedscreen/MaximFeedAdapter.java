@@ -11,7 +11,6 @@ import com.tcolligan.maximmaker.data.Maxim;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * An adapter used to display CardViews with Maxims on the in {@link MaximFeedActivity}
@@ -20,7 +19,7 @@ import java.util.Locale;
  *
  * @author Thomas Colligan
  */
-public class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
+class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHolder>
 {
     //==============================================================================================
     // Class Properties

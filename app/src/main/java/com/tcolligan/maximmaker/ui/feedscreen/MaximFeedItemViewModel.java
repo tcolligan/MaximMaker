@@ -14,7 +14,7 @@ import java.util.Locale;
  *
  * @author Thomas Colligan
  */
-public class MaximFeedItemViewModel
+class MaximFeedItemViewModel
 {
     //==============================================================================================
     // Class Properties
