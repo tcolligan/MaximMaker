@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * A utility class with static methods to help with common file operations.
- *
+ * <p/>
  * Created on 7/24/2016.
  *
  * @author Thomas Colligan
@@ -45,11 +45,6 @@ public class FileUtils
 
     public static boolean createNewFileIfFileDoesNotExist(File file) throws IOException
     {
-        if (!file.exists())
-        {
-            return file.createNewFile();
-        }
-
-        return true;
+        return file.exists() || file.createNewFile();
     }
 }
