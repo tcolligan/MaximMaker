@@ -1,27 +1,36 @@
 package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * An activity that displays all of the Maxims that the user has saved in a feed style UI.
@@ -35,6 +44,9 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     //==============================================================================================
     // Class Properties
     //==============================================================================================
+
+    private static final String EXPORT_SEPARATOR = "\n";
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy - hh:mm aa", Locale.getDefault());
 
     private ProgressBar progressBar;
     private TextView messageTextView;
@@ -80,6 +92,21 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     {
         super.onResume();
         maximFeedPresenter.onResume();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.export:
+            {
+                maximFeedPresenter.onExportClicked();
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -270,6 +297,73 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         Intent intent = new Intent(this, AddMaximActivity.class);
         intent.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_UUID, maximToEdit.getUuid());
         startActivity(intent);
+    }
+
+    @Override
+    public void exportMaximsToEmail(List<Maxim> maximList)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (Maxim maxim : maximList)
+        {
+            stringBuilder.append(convertMaximToExportText(getApplicationContext(), maxim));
+            stringBuilder.append("\n\n");
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
+        intent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+
+        if (intent.resolveActivity(getPackageManager()) == null)
+        {
+            Toast toast = Toast.makeText(this, R.string.no_email_client_installed, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        else
+        {
+            startActivity(intent);
+        }
+    }
+
+    //==============================================================================================
+    // Helper Methods
+    //==============================================================================================
+
+    private static  String convertMaximToExportText(Context context, Maxim maxim)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(maxim.getMessage());
+        stringBuilder.append(EXPORT_SEPARATOR);
+
+        if (maxim.hasAuthor())
+        {
+            stringBuilder.append(context.getString(R.string.export_author_label));
+            stringBuilder.append(" ");
+            stringBuilder.append(maxim.getAuthor());
+            stringBuilder.append(EXPORT_SEPARATOR);
+        }
+
+        if (maxim.hasTags())
+        {
+            stringBuilder.append(context.getString(R.string.export_tags_label));
+            stringBuilder.append(" ");
+            stringBuilder.append(maxim.getTagsCommaSeparated());
+            stringBuilder.append(EXPORT_SEPARATOR);
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        TimeZone timeZone = calendar.getTimeZone();
+        simpleDateFormat.setTimeZone(timeZone);
+        Date date = new Date(maxim.getCreationTimestamp());
+
+        stringBuilder.append(context.getString(R.string.export_recorded_date_label));
+        stringBuilder.append(" ");
+        stringBuilder.append(simpleDateFormat.format(date));
+
+        return stringBuilder.toString();
     }
 
 }

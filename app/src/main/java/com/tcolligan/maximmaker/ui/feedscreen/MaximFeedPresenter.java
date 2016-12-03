@@ -29,6 +29,7 @@ class MaximFeedPresenter implements MaximViewHolderListener
     private boolean didShowLoadingState;
     private String searchText;
     private boolean isSearching;
+    private List<Maxim> loadedMaximList;
 
     //==============================================================================================
     // Constructor
@@ -73,6 +74,7 @@ class MaximFeedPresenter implements MaximViewHolderListener
                 @Override
                 public void onMaximsLoaded(List<Maxim> loadedMaximList)
                 {
+                    MaximFeedPresenter.this.loadedMaximList = loadedMaximList;
                     showMaximsWithFeedStates(loadedMaximList);
                 }
             });
@@ -131,6 +133,11 @@ class MaximFeedPresenter implements MaximViewHolderListener
     {
         isSearching = false;
         showMaximsWithFeedStates(maximManager.getMaximList());
+    }
+
+    public void onExportClicked()
+    {
+        maximFeedView.exportMaximsToEmail(loadedMaximList);
     }
 
     //==============================================================================================
@@ -203,6 +210,8 @@ class MaximFeedPresenter implements MaximViewHolderListener
         void showAddMaximScreen();
 
         void showEditMaximScreen(Maxim maximToEdit);
+
+        void exportMaximsToEmail(List<Maxim> maximList);
     }
 
 }

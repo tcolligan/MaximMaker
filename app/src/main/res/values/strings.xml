@@ -9,6 +9,14 @@
     <string name="no_maxims_text">You do not have any saved maxims.\nTry adding one using the \'+\' button below!</string>
     <string name="error_loading_maxims_text">Error loading maxims!</string>
     <string name="search_hint">Search for maxims</string>
+    <string name="export">Export</string>
+    <string name="email_subject">MaximMaker Quotes</string>
+    <string name="no_email_client_installed">You must install an email application inorder to export your maxims!</string>
+
+    <!-- Email Formatting -->
+    <string name="export_author_label">Author:</string>
+    <string name="export_tags_label">Tags:</string>
+    <string name="export_recorded_date_label">Recorded On:</string>
 
     <!-- Maxim Edit or Delete Dialog -->
     <string name="edit_of_delete_maxim_message">What would you like to do with this maxim?</string>
