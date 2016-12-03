@@ -13,7 +13,7 @@ import java.util.UUID;
 
 /**
  * A model that represents a specific maxim or quote.
- * <p>
+ * <p/>
  * Created on 3/28/2016.
  *
  * @author Thomas Colligan
@@ -181,9 +181,9 @@ public class Maxim
         if (hasTags())
         {
             stringBuilder.append(getTagsCommaSeparated());
+            stringBuilder.append(TO_STRING_SEPARATOR);
         }
 
-        stringBuilder.append(TO_STRING_SEPARATOR);
         stringBuilder.append(new Date(creationTimestamp).toString());
 
         return stringBuilder.toString();
