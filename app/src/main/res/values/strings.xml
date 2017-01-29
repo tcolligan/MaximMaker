@@ -1,0 +1,35 @@
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:locale="en">
+
+    <!-- General Strings -->
+    <string name="app_name">MaximMaker</string>
+
+    <!-- Maxim Feed Screen -->
+    <string name="no_maxims_text">You do not have any saved maxims.\nTry adding one using the \'+\' button below!</string>
+    <string name="error_loading_maxims_text">Error loading maxims!</string>
+    <string name="search_hint">Search for maxims</string>
+    <string name="export">Export</string>
+    <string name="email_subject">MaximMaker Quotes</string>
+    <string name="no_email_client_installed">You must install an email application inorder to export your maxims!</string>
+
+    <!-- Email Formatting -->
+    <string name="export_author_label">Author:</string>
+    <string name="export_tags_label">Tags:</string>
+    <string name="export_recorded_date_label">Recorded On:</string>
+
+    <!-- Maxim Edit or Delete Dialog -->
+    <string name="edit_of_delete_maxim_message">What would you like to do with this maxim?</string>
+    <string name="edit_button_text">Edit</string>
+
+    <!-- Maxim Deletion Dialog -->
+    <string name="delete_maxim_dialog_message">Are you sure you want to delete this maxim?</string>
+    <string name="delete_button_text">Delete</string>
+
+    <!-- Add Maxim Screen -->
+    <string name="menu_label_save">Save</string>
+    <string name="maxim_hint">Maxim</string>
+    <string name="author_hint">Author</string>
+    <string name="tags_hint">Tags</string>
+    <string name="add_maxim_error_text">You must add a maxim or quote!</string>
+</resources>

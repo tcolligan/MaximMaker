@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+apply from: '../config/quality.gradle'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "com.tcolligan.maximmaker"
+        minSdkVersion 18
+        targetSdkVersion 24
+        versionCode 2
+        versionName "1.1"
+    }
+    signingConfigs {
+        release {
+            storeFile file("../maxim_maker_release_keystore.jks")
+            storePassword System.getenv("KSTOREPWD")
+            keyAlias "maximmaker"
+            keyPassword System.getenv("KEYPWD")
+        }
+    }
+    buildTypes {
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //noinspection GroovyAssignabilityCheck
+            signingConfig signingConfigs.release
+        }
+
+        staging {
+            //noinspection GroovyAssignabilityCheck
+            initWith release
+            debuggable true
+            applicationIdSuffix ".staging"
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:cardview-v7:24.0.0'
+}

@@ -1,0 +1,5 @@
+<!--suppress XmlUnboundNsPrefix -->
+<resources>
+    <!-- General Strings -->
+    <string name="app_name">MaximMaker-Staging</string>
+</resources>

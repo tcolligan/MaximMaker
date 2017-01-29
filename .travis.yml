@@ -1,0 +1,16 @@
+language: android
+jdk:
+  - oraclejdk8
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-24.0.0
+    - android-24
+    - extra-android-m2repository
+branches:
+  only:
+    - master
+    - development
+script:
+   - ./gradlew clean assembleStaging check --info
