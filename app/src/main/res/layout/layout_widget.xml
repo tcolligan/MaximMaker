@@ -39,6 +39,17 @@
             tools:ignore="SmallSp"
             tools:text="- Marcus Aurelius"/>
 
+        <TextView
+            android:id="@+id/noMaximsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/widget_no_saved_maxims"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:visibility="gone"/>
+
     </LinearLayout>
 
 </RelativeLayout>

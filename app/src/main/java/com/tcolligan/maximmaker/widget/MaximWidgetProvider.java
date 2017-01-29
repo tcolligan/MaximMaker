@@ -5,17 +5,22 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
+import com.tcolligan.maximmaker.utils.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 /**
+ * An AppWidgetProvider that is used to display a widget containing a random Maxim.
+ *
  * Created on 1/29/2017.
  *
  * @author Thomas Colligan
@@ -42,23 +47,86 @@ public class MaximWidgetProvider extends AppWidgetProvider
                                final int[] appWidgetIds,
                                final List<Maxim> loadedMaximList)
     {
+        WidgetMaximCache.load(context);
+
         for (int widgetId : appWidgetIds)
         {
-            int randomMaximIndex = random.nextInt(loadedMaximList.size());
-            Maxim randomMaxim = loadedMaximList.get(randomMaximIndex);
+            List<String> displayedMaximIdsList = WidgetMaximCache.getDisplayedMaximIdsList();
+            Maxim maximToDisplay = retrieveNewRandomMaximToDisplay(loadedMaximList, displayedMaximIdsList);
 
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.layout_widget);
-            remoteViews.setTextViewText(R.id.messageTextView, randomMaxim.getMessage());
-            remoteViews.setTextViewText(R.id.authorTextView, String.format(Locale.US, "- %s", randomMaxim.getAuthor()));
+            if (maximToDisplay == null)
+            {
+                WidgetMaximCache.clear(context);
+                displayedMaximIdsList = WidgetMaximCache.getDisplayedMaximIdsList();
+                maximToDisplay = retrieveNewRandomMaximToDisplay(loadedMaximList, displayedMaximIdsList);
+            }
 
-            Intent intent = new Intent(context, MaximWidgetProvider.class);
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetId});
+            updateWidget(context, appWidgetManager, widgetId, maximToDisplay);
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-            remoteViews.setOnClickPendingIntent(R.id.rootWidgetLayout, pendingIntent);
-
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
+            if (maximToDisplay != null)
+            {
+                WidgetMaximCache.addDisplayedMaximId(context, maximToDisplay.getUuid());
+            }
         }
+    }
+
+    private Maxim retrieveNewRandomMaximToDisplay(final List<Maxim> loadedMaximList, List<String> displayedMaximIdsList)
+    {
+        final List<Maxim> availableMaximsList = new ArrayList<>(loadedMaximList);
+
+        for (String displayedMaximId : displayedMaximIdsList)
+        {
+            for (int i = 0; i < availableMaximsList.size(); i++)
+            {
+                Maxim availableMaxim = availableMaximsList.get(i);
+
+                if (availableMaxim.getUuid().equals(displayedMaximId))
+                {
+                    availableMaximsList.remove(availableMaxim);
+                    break;
+                }
+            }
+        }
+
+        if (availableMaximsList.size() == 0)
+        {
+            return null;
+        }
+
+        int randomMaximIndex = random.nextInt(availableMaximsList.size());
+        return availableMaximsList.get(randomMaximIndex);
+    }
+
+    private void updateWidget(final Context context,
+                              final AppWidgetManager appWidgetManager,
+                              int widgetId,
+                              Maxim maximToDisplay)
+    {
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.layout_widget);
+
+        if (maximToDisplay == null)
+        {
+            remoteViews.setViewVisibility(R.id.noMaximsTextView, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.messageTextView, View.GONE);
+            remoteViews.setViewVisibility(R.id.authorTextView, View.GONE);
+        }
+        else
+        {
+            remoteViews.setTextViewText(R.id.messageTextView, maximToDisplay.getMessage());
+            remoteViews.setTextViewText(R.id.authorTextView, String.format(Locale.US, "- %s", maximToDisplay.getAuthor()));
+
+            remoteViews.setViewVisibility(R.id.noMaximsTextView, View.GONE);
+            remoteViews.setViewVisibility(R.id.messageTextView, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.authorTextView, View.VISIBLE);
+        }
+
+        Intent intent = new Intent(context, MaximWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{widgetId});
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        remoteViews.setOnClickPendingIntent(R.id.rootWidgetLayout, pendingIntent);
+
+        appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 }
