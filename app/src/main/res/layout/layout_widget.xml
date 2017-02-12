@@ -50,6 +50,19 @@
             android:textStyle="bold"
             tools:visibility="gone"/>
 
+        <TextView
+            android:id="@+id/tagsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/half_default_margin"
+            android:gravity="start"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            tools:ignore="SmallSp"
+            tools:text="Meditationss"/>
+
     </LinearLayout>
 
 </RelativeLayout>

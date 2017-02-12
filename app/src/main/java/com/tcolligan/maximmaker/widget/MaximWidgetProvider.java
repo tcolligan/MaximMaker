@@ -109,15 +109,18 @@ public class MaximWidgetProvider extends AppWidgetProvider
             remoteViews.setViewVisibility(R.id.noMaximsTextView, View.VISIBLE);
             remoteViews.setViewVisibility(R.id.messageTextView, View.GONE);
             remoteViews.setViewVisibility(R.id.authorTextView, View.GONE);
+            remoteViews.setViewVisibility(R.id.tagsTextView, View.GONE);
         }
         else
         {
             remoteViews.setTextViewText(R.id.messageTextView, maximToDisplay.getMessage());
             remoteViews.setTextViewText(R.id.authorTextView, String.format(Locale.US, "- %s", maximToDisplay.getAuthor()));
+            remoteViews.setTextViewText(R.id.tagsTextView, maximToDisplay.hasTags() ? maximToDisplay.getTagsCommaSeparated() : "");
 
             remoteViews.setViewVisibility(R.id.noMaximsTextView, View.GONE);
             remoteViews.setViewVisibility(R.id.messageTextView, View.VISIBLE);
             remoteViews.setViewVisibility(R.id.authorTextView, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.tagsTextView, View.VISIBLE);
         }
 
         Intent intent = new Intent(context, MaximWidgetProvider.class);
