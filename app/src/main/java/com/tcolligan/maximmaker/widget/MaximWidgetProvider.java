@@ -11,7 +11,6 @@ import android.widget.RemoteViews;
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
-import com.tcolligan.maximmaker.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.Random;
 
 /**
  * An AppWidgetProvider that is used to display a widget containing a random Maxim.
- *
+ * <p/>
  * Created on 1/29/2017.
  *
  * @author Thomas Colligan
@@ -114,8 +113,11 @@ public class MaximWidgetProvider extends AppWidgetProvider
         else
         {
             remoteViews.setTextViewText(R.id.messageTextView, maximToDisplay.getMessage());
-            remoteViews.setTextViewText(R.id.authorTextView, String.format(Locale.US, "- %s", maximToDisplay.getAuthor()));
-            remoteViews.setTextViewText(R.id.tagsTextView, maximToDisplay.hasTags() ? maximToDisplay.getTagsCommaSeparated() : "");
+            remoteViews.setTextViewText(R.id.authorTextView, maximToDisplay.hasAuthor() ?
+                    String.format(Locale.US, "- %s", maximToDisplay.getAuthor()) : "");
+
+            remoteViews.setTextViewText(R.id.tagsTextView, maximToDisplay.hasTags() ?
+                    maximToDisplay.getTagsCommaSeparated() : "");
 
             remoteViews.setViewVisibility(R.id.noMaximsTextView, View.GONE);
             remoteViews.setViewVisibility(R.id.messageTextView, View.VISIBLE);
