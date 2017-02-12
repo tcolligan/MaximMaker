@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rootWidgetLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cardview_dark_background"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/messageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            tools:text="The happiness of your life depends on the quality of your thoughts."/>
+
+        <TextView
+            android:id="@+id/authorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="start"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            tools:ignore="SmallSp"
+            tools:text="- Marcus Aurelius"/>
+
+        <TextView
+            android:id="@+id/noMaximsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/widget_no_saved_maxims"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tagsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/half_default_margin"
+            android:gravity="start"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            tools:ignore="SmallSp"
+            tools:text="Meditationss"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
