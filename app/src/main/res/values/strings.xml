@@ -32,4 +32,7 @@
     <string name="author_hint">Author</string>
     <string name="tags_hint">Tags</string>
     <string name="add_maxim_error_text">You must add a maxim or quote!</string>
+
+    <!-- Maxim Widget -->
+    <string name="widget_no_saved_maxims">You do not have any saved maxims!</string>
 </resources>
