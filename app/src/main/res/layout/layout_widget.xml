@@ -61,7 +61,7 @@
             android:textSize="10sp"
             android:textStyle="italic"
             tools:ignore="SmallSp"
-            tools:text="Meditationss"/>
+            tools:text="Meditations"/>
 
     </LinearLayout>
 
