@@ -22,7 +22,7 @@ public class MaximManager
     // Class Properties
     //==============================================================================================
 
-    public static final String SAVED_MAXIMS_JSON_FILE_NAME = "saved_maxims.json";
+    static final String SAVED_MAXIMS_JSON_FILE_NAME = "saved_maxims.json";
     private static final String TAG = "MaximManager";
     private static final MaximManager instance = new MaximManager();
     private final List<Maxim> maximList;

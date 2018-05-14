@@ -11,6 +11,8 @@ import android.app.Application;
  */
 public class MyApplication extends Application
 {
+    private static Application instance;
+
     //==============================================================================================
     // Life-cycle Methods
     //==============================================================================================
@@ -19,8 +21,16 @@ public class MyApplication extends Application
     public void onCreate()
     {
         super.onCreate();
+        instance = this;
+    }
 
-        // TODO: Load crash logger and analytics
+    //==============================================================================================
+    // Static Class Methods
+    //==============================================================================================
+
+    public static Application getApplication()
+    {
+        return instance;
     }
 
 }
