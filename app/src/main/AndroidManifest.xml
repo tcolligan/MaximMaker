@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".MyApplication"
+        android:name=".core.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_scheme"
         android:icon="@mipmap/ic_launcher"
@@ -28,7 +28,7 @@
             android:windowSoftInputMode="stateVisible">
         </activity>
 
-        <receiver android:name=".widget.MaximWidgetProvider">
+        <receiver android:name=".ui.MaximWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>

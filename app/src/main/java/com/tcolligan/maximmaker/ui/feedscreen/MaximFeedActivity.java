@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
+import com.tcolligan.maximmaker.domain.MaximFeedPresenter;
 import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
 import java.text.SimpleDateFormat;
@@ -39,7 +40,7 @@ import java.util.TimeZone;
  *
  * @author Thomas Colligan
  */
-public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeedView
+public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPresenter.MaximFeedView, MaximFeedAdapter.MaximViewHolderListener
 {
     //==============================================================================================
     // Class Properties
@@ -148,7 +149,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     private void setupPresenterAndAdapter()
     {
         maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
-        maximFeedAdapter = new MaximFeedAdapter(maximFeedPresenter);
+        maximFeedAdapter = new MaximFeedAdapter(this);
         recyclerView.setAdapter(maximFeedAdapter);
     }
 
@@ -189,6 +190,16 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
                 return true;
             }
         });
+    }
+
+    //==============================================================================================
+    // MaximViewHolderListener Implementation
+    //==============================================================================================
+
+    @Override
+    public void onLongClick(final Maxim maxim)
+    {
+        maximFeedPresenter.onMaximLongClick(maxim);
     }
 
     //==============================================================================================

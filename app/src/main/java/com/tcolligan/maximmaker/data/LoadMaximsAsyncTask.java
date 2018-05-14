@@ -3,8 +3,8 @@ package com.tcolligan.maximmaker.data;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.tcolligan.maximmaker.utils.FileUtils;
-import com.tcolligan.maximmaker.utils.LogUtils;
+import com.tcolligan.maximmaker.core.utils.FileUtils;
+import com.tcolligan.maximmaker.core.utils.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

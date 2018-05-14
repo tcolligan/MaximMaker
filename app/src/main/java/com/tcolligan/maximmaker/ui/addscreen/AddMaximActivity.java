@@ -11,7 +11,8 @@ import android.widget.EditText;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.ui.addscreen.AddMaximPresenter.AddMaximView;
+import com.tcolligan.maximmaker.domain.AddMaximPresenter;
+import com.tcolligan.maximmaker.domain.AddMaximPresenter.AddMaximView;
 
 /**
  * An activity that allows users to add their own custom Maxims.

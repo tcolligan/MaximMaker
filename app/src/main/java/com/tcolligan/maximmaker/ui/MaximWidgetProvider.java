@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.widget;
+package com.tcolligan.maximmaker.ui;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
+import com.tcolligan.maximmaker.data.WidgetMaximCache;
 
 import java.util.ArrayList;
 import java.util.List;

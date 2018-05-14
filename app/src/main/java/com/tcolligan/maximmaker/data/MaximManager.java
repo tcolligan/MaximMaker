@@ -2,7 +2,7 @@ package com.tcolligan.maximmaker.data;
 
 import android.content.Context;
 
-import com.tcolligan.maximmaker.utils.LogUtils;
+import com.tcolligan.maximmaker.core.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

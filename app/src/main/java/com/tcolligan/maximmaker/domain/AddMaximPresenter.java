@@ -1,10 +1,11 @@
-package com.tcolligan.maximmaker.ui.addscreen;
+package com.tcolligan.maximmaker.domain;
 
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
+import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author Thomas Colligan
  */
-class AddMaximPresenter
+public class AddMaximPresenter
 {
     //==============================================================================================
     // Class Properties

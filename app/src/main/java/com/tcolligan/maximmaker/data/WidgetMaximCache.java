@@ -1,16 +1,16 @@
-package com.tcolligan.maximmaker.widget;
+package com.tcolligan.maximmaker.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
-import com.tcolligan.maximmaker.utils.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.tcolligan.maximmaker.core.utils.LogUtils;
+import com.tcolligan.maximmaker.ui.MaximWidgetProvider;
 
 /**
  * A class that keeps track of which maxim has been displayed by the {@link MaximWidgetProvider}.

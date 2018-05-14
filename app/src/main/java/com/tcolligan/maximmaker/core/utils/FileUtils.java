@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.utils;
+package com.tcolligan.maximmaker.core.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

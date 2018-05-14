@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker;
+package com.tcolligan.maximmaker.core;
 
 import android.app.Application;
 

@@ -1,10 +1,10 @@
-package com.tcolligan.maximmaker.ui.feedscreen;
+package com.tcolligan.maximmaker.domain;
 
 import android.content.Context;
 
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximManager;
-import com.tcolligan.maximmaker.ui.feedscreen.MaximFeedAdapter.MaximViewHolderListener;
+import com.tcolligan.maximmaker.ui.feedscreen.MaximFeedActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Locale;
  *
  * @author Thomas Colligan
  */
-class MaximFeedPresenter implements MaximViewHolderListener
+public class MaximFeedPresenter
 {
     //==============================================================================================
     // Class Properties
@@ -140,6 +140,11 @@ class MaximFeedPresenter implements MaximViewHolderListener
         maximFeedView.exportMaximsToEmail(loadedMaximList);
     }
 
+    public void onMaximLongClick(final Maxim maxim)
+    {
+        maximFeedView.showEditOrDeleteMaximDialog(maxim);
+    }
+
     //==============================================================================================
     // MaximFeedView Helper Methods
     //==============================================================================================
@@ -177,16 +182,6 @@ class MaximFeedPresenter implements MaximViewHolderListener
         {
             maximFeedView.showMaxims(maximList);
         }
-    }
-
-    //==============================================================================================
-    // MaximViewHolderListener Implementation
-    //==============================================================================================
-
-    @Override
-    public void onLongClick(final Maxim maxim)
-    {
-        maximFeedView.showEditOrDeleteMaximDialog(maxim);
     }
 
     //==============================================================================================
