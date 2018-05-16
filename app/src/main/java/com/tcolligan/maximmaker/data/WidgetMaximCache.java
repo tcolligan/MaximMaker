@@ -4,17 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.tcolligan.maximmaker.ui.MaximWidgetProvider;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.tcolligan.maximmaker.core.utils.LogUtils;
-import com.tcolligan.maximmaker.ui.MaximWidgetProvider;
+
+import timber.log.Timber;
 
 /**
  * A class that keeps track of which maxim has been displayed by the {@link MaximWidgetProvider}.
- *
+ * <p>
  * Created on 1/29/2017.
  *
  * @author Thomas Colligan
@@ -25,7 +27,6 @@ public class WidgetMaximCache
     // Class Properties
     //==============================================================================================
 
-    private static final String TAG = "WidgetMaximCache";
     private static final String KEY_DISPLAYED_MAXIM_IDS = "DISPLAYED_MAXIM_IDS";
     private static JSONArray displayedMaximIdsArray = new JSONArray();
 
@@ -59,7 +60,7 @@ public class WidgetMaximCache
                 }
                 catch (JSONException e)
                 {
-                    LogUtils.w(TAG, e);
+                    Timber.w(e);
                     return null;
                 }
             }
@@ -68,9 +69,9 @@ public class WidgetMaximCache
         return null;
     }
 
-    public static List<String> getDisplayedMaximIdsList()
+    public static List<Integer> getDisplayedMaximIdsList()
     {
-        List<String> displayedMaximIdsList = new ArrayList<>();
+        List<Integer> displayedMaximIdsList = new ArrayList<>();
 
         int len = displayedMaximIdsArray.length();
 
@@ -78,18 +79,18 @@ public class WidgetMaximCache
         {
             try
             {
-                displayedMaximIdsList.add(displayedMaximIdsArray.getString(i));
+                displayedMaximIdsList.add(displayedMaximIdsArray.getInt(i));
             }
             catch (JSONException e)
             {
-                LogUtils.w(TAG, e);
+                Timber.w(e);
             }
         }
 
         return displayedMaximIdsList;
     }
 
-    public static void addDisplayedMaximId(Context context, String maximId)
+    public static void addDisplayedMaximId(Context context, int maximId)
     {
         displayedMaximIdsArray.put(maximId);
 

@@ -1,17 +1,15 @@
-package com.tcolligan.maximmaker.domain;
+package com.tcolligan.maximmaker.domain.feed;
 
-import android.content.Context;
-
+import com.tcolligan.maximmaker.data.Callback;
 import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.data.MaximManager;
-import com.tcolligan.maximmaker.ui.feedscreen.MaximFeedActivity;
+import com.tcolligan.maximmaker.data.MaximRepository;
+import com.tcolligan.maximmaker.data.RepositoryManager;
+import com.tcolligan.maximmaker.domain.add.MaximViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
- * A presenter class to handle some of the logic for {@link MaximFeedActivity}
+ * A presenter class to handle some of the logic for MaximFeedActivity.
  * <p/>
  * Created on 7/2/2016.
  *
@@ -23,24 +21,35 @@ public class MaximFeedPresenter
     // Class Properties
     //==============================================================================================
 
-    private final Context context;
-    private final MaximFeedView maximFeedView;
-    private final MaximManager maximManager;
+    private MaximFeedView view;
+    private final MaximRepository maximRepository;
     private boolean didShowLoadingState;
     private String searchText;
     private boolean isSearching;
-    private List<Maxim> loadedMaximList;
+    private List<MaximFeedItemViewModel> maximViewModels;
 
     //==============================================================================================
     // Constructor
     //==============================================================================================
 
-    public MaximFeedPresenter(Context context, MaximFeedView maximFeedView)
+    public MaximFeedPresenter()
     {
-        this.context = context.getApplicationContext();
-        this.maximFeedView = maximFeedView;
-        this.maximManager = MaximManager.getInstance();
+        this.maximRepository = RepositoryManager.getInstance().getMaximRepository();
         this.searchText = "";
+    }
+
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
+
+    public void attachView(MaximFeedView maximFeedView)
+    {
+        this.view = maximFeedView;
+    }
+
+    public void detachView()
+    {
+        this.view = null;
     }
 
     //==============================================================================================
@@ -58,7 +67,7 @@ public class MaximFeedPresenter
             }
             else
             {
-                showMaximsWithFeedStates(maximManager.getMaximList());
+                showMaximsWithFeedStates(maximViewModels);
             }
         }
         else
@@ -66,16 +75,16 @@ public class MaximFeedPresenter
             // The initial loading screen gets shown the first time onResume is called.
             // It will probably load super fast, so the user wont see it.
             // But it if the user has a lot of maxims to load, it will be helpful then.
-            maximFeedView.showLoadingState();
+            view.showLoadingState();
             didShowLoadingState = true;
 
-            maximManager.loadMaxims(context, new MaximManager.MaximsLoadedListener()
+            maximRepository.fetchAllMaxims(new Callback<List<Maxim>>()
             {
                 @Override
-                public void onMaximsLoaded(List<Maxim> loadedMaximList)
+                public void onSuccess(List<Maxim> data)
                 {
-                    MaximFeedPresenter.this.loadedMaximList = loadedMaximList;
-                    showMaximsWithFeedStates(loadedMaximList);
+                    maximViewModels = MaximFeedItemViewModelConerter.convertMaximsToViewModels(data);
+                    showMaximsWithFeedStates(maximViewModels);
                 }
             });
         }
@@ -83,23 +92,30 @@ public class MaximFeedPresenter
 
     public void onAddMaximButtonClicked()
     {
-        maximFeedView.showAddMaximScreen();
+        view.showAddMaximScreen();
     }
 
-    public void onEditMaxim(Maxim maxim)
+    public void onEditMaxim(int maximId)
     {
-        maximFeedView.showEditMaximScreen(maxim);
+        view.showEditMaximScreen(maximId);
     }
 
-    public void onDeleteMaxim(Maxim maxim)
+    public void onDeleteMaxim(int maximId)
     {
-        maximFeedView.showConfirmMaximDeletionDialog(maxim);
+        view.showConfirmMaximDeletionDialog(maximId);
     }
 
-    public void onDeleteMaximConfirmed(Maxim maximToDelete)
+    public void onDeleteMaximConfirmed(int maximId)
     {
-        MaximManager.getInstance().deleteMaxim(context, maximToDelete);
-        showMaximsWithFeedStates(maximManager.getMaximList());
+        maximRepository.findMaximById(maximId, new Callback<Maxim>()
+        {
+            @Override
+            public void onSuccess(Maxim data)
+            {
+                maximRepository.deleteMaxim(data);
+                // TODO: Refresh list
+            }
+        });
     }
 
     public void onSearchOpened()
@@ -107,7 +123,7 @@ public class MaximFeedPresenter
         // While searching, we do not want any of the empty or error states in the list to show.
         // So even if there are now maxims in the list, just show an empty list.
         isSearching = true;
-        maximFeedView.showMaxims(maximManager.getMaximList());
+        //view.showMaxims(maximManager.getMaximList());
     }
 
     public void onSearch(String searchText)
@@ -121,7 +137,7 @@ public class MaximFeedPresenter
 
         if (searchText.isEmpty())
         {
-            maximFeedView.showMaxims(maximManager.getMaximList());
+            //view.showMaxims(maximManager.getMaximList());
         }
         else
         {
@@ -132,17 +148,17 @@ public class MaximFeedPresenter
     public void onSearchClosed()
     {
         isSearching = false;
-        showMaximsWithFeedStates(maximManager.getMaximList());
+        //showMaximsWithFeedStates(maximManager.getMaximList());
     }
 
     public void onExportClicked()
     {
-        maximFeedView.exportMaximsToEmail(loadedMaximList);
+        // TODO: Export
     }
 
-    public void onMaximLongClick(final Maxim maxim)
+    public void onMaximLongClick(MaximFeedItemViewModel viewModel)
     {
-        maximFeedView.showEditOrDeleteMaximDialog(maxim);
+        view.showEditOrDeleteMaximDialog(viewModel.getMaximId());
     }
 
     //==============================================================================================
@@ -151,7 +167,7 @@ public class MaximFeedPresenter
 
     private void showMaximsForSearchText()
     {
-        Locale defaultLocale = Locale.getDefault();
+        /*Locale defaultLocale = Locale.getDefault();
         List<Maxim> searchResults = new ArrayList<>();
         searchText = searchText.toLowerCase(defaultLocale);
 
@@ -165,22 +181,22 @@ public class MaximFeedPresenter
             }
         }
 
-        maximFeedView.showMaxims(searchResults);
+        view.showMaxims(searchResults);*/
     }
 
-    private void showMaximsWithFeedStates(List<Maxim> maximList)
+    private void showMaximsWithFeedStates(List<MaximFeedItemViewModel> viewModels)
     {
-        if (maximList == null)
+        if (viewModels == null)
         {
-            maximFeedView.showLoadingError();
+            view.showLoadingError();
         }
-        else if (maximList.size() == 0)
+        else if (viewModels.isEmpty())
         {
-            maximFeedView.showEmptyState();
+            view.showEmptyState();
         }
         else
         {
-            maximFeedView.showMaxims(maximList);
+            view.showMaxims(viewModels);
         }
     }
 
@@ -196,17 +212,15 @@ public class MaximFeedPresenter
 
         void showLoadingError();
 
-        void showMaxims(List<Maxim> maximList);
+        void showMaxims(List<MaximFeedItemViewModel> viewModels);
 
-        void showEditOrDeleteMaximDialog(Maxim maxim);
+        void showEditOrDeleteMaximDialog(int maximId);
 
-        void showConfirmMaximDeletionDialog(Maxim maxim);
+        void showConfirmMaximDeletionDialog(int maximId);
 
         void showAddMaximScreen();
 
-        void showEditMaximScreen(Maxim maximToEdit);
-
-        void exportMaximsToEmail(List<Maxim> maximList);
+        void showEditMaximScreen(int maximId);
     }
 
 }

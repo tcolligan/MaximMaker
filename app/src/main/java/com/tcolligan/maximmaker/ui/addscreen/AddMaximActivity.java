@@ -1,6 +1,8 @@
 package com.tcolligan.maximmaker.ui.addscreen;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +12,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.tcolligan.maximmaker.R;
-import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.domain.AddMaximPresenter;
-import com.tcolligan.maximmaker.domain.AddMaximPresenter.AddMaximView;
+import com.tcolligan.maximmaker.domain.add.AddMaximPresenter;
+import com.tcolligan.maximmaker.domain.add.AddMaximPresenter.AddMaximView;
+import com.tcolligan.maximmaker.domain.add.MaximViewModel;
 
 /**
  * An activity that allows users to add their own custom Maxims.
@@ -27,11 +29,28 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
     // Class Properties
     //==============================================================================================
 
-    public static final String KEY_EDIT_MAXIM_UUID = "kEditMaximUuid";
+    private static final String KEY_EDIT_MAXIM_ID = "KEY_EDIT_MAXIM_ID";
     private EditText maximEditText;
     private EditText authorEditText;
     private EditText tagsEditText;
-    private AddMaximPresenter addMaximPresenter;
+    private AddMaximPresenter presenter;
+
+    //==============================================================================================
+    // Static Class Methods
+    //==============================================================================================
+
+    public static void start(Context context)
+    {
+        Intent starter = new Intent(context, AddMaximActivity.class);
+        context.startActivity(starter);
+    }
+
+    public static void startToEditMaxim(Context context, int maximId)
+    {
+        Intent starter = new Intent(context, AddMaximActivity.class);
+        starter.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_ID, maximId);
+        context.startActivity(starter);
+    }
 
     //==============================================================================================
     // Life-cycle Methods
@@ -46,9 +65,21 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         findViews();
         setupActionBar();
 
-        addMaximPresenter = new AddMaximPresenter(getApplicationContext(), this);
+        presenter = new AddMaximPresenter();
+        presenter.attachView(this);
 
-        checkForEditModeMaxim();
+        checkForEditableMaximId();
+    }
+
+    private void checkForEditableMaximId()
+    {
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null)
+        {
+            int id = extras.getInt(KEY_EDIT_MAXIM_ID);
+            presenter.onMaximToEditUuidFound(id);
+        }
     }
 
     @Override
@@ -84,7 +115,8 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
     public void onDestroy()
     {
         super.onDestroy();
-        addMaximPresenter = null;
+        presenter.detachView();
+        presenter = null;
     }
 
     //==============================================================================================
@@ -97,7 +129,7 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         String author = authorEditText.getText().toString();
         String tags = tagsEditText.getText().toString();
 
-        addMaximPresenter.onSaveClicked(maxim, author, tags);
+        presenter.onSaveClicked(maxim, author, tags, System.currentTimeMillis());
     }
 
     //==============================================================================================
@@ -106,9 +138,9 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
 
     private void findViews()
     {
-        maximEditText = (EditText) findViewById(R.id.maximEditText);
-        authorEditText = (EditText) findViewById(R.id.authorEditText);
-        tagsEditText = (EditText) findViewById(R.id.tagsEditText);
+        maximEditText = findViewById(R.id.maximEditText);
+        authorEditText = findViewById(R.id.authorEditText);
+        tagsEditText = findViewById(R.id.tagsEditText);
     }
 
     private void setupActionBar()
@@ -121,34 +153,35 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         }
     }
 
-    private void checkForEditModeMaxim()
-    {
-        Bundle extras = getIntent().getExtras();
-
-        if (extras != null)
-        {
-            String uuid = extras.getString(KEY_EDIT_MAXIM_UUID);
-            addMaximPresenter.onMaximToEditUuidFound(uuid);
-        }
-    }
-
     //==============================================================================================
     // AddMaximView Implementation Methods
     //==============================================================================================
 
     @Override
-    public void showMaxim(Maxim maxim)
+    public void showLoading()
     {
-        maximEditText.setText(maxim.getMessage());
+        // TODO: Do this
+    }
 
-        if (maxim.hasAuthor())
+    @Override
+    public void dismissLoading()
+    {
+        // TODO: Do this
+    }
+
+    @Override
+    public void showMaxim(MaximViewModel viewModel)
+    {
+        maximEditText.setText(viewModel.getMessage());
+
+        if (viewModel.hasAuthor())
         {
-            authorEditText.setText(maxim.getAuthor());
+            authorEditText.setText(viewModel.getAuthor());
         }
 
-        if (maxim.hasTags())
+        if (viewModel.hasTags())
         {
-            tagsEditText.setText(maxim.getTagsCommaSeparated());
+            tagsEditText.setText(viewModel.getTags());
         }
     }
 

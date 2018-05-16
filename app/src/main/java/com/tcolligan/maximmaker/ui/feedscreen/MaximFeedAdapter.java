@@ -1,5 +1,6 @@
 package com.tcolligan.maximmaker.ui.feedscreen;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tcolligan.maximmaker.R;
-import com.tcolligan.maximmaker.data.Maxim;
+import com.tcolligan.maximmaker.domain.feed.MaximFeedItemViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
     // Constructor
     //==============================================================================================
 
-    public MaximFeedAdapter(MaximViewHolderListener maximViewHolderListener)
+    MaximFeedAdapter(MaximViewHolderListener maximViewHolderListener)
     {
         this.maximFeedItemViewModelList = new ArrayList<>();
         this.maximViewHolderListener = maximViewHolderListener;
@@ -42,7 +43,7 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
     // Class Instance Methods
     //==============================================================================================
 
-    public void setMaximFeedItemViewModelList(List<MaximFeedItemViewModel> maximFeedItemViewModelList)
+    void setMaximFeedItemViewModelList(List<MaximFeedItemViewModel> maximFeedItemViewModelList)
     {
         this.maximFeedItemViewModelList = maximFeedItemViewModelList;
     }
@@ -51,8 +52,9 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
     // RecyclerView.Adapter Methods
     //==============================================================================================
 
+    @NonNull
     @Override
-    public MaximViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public MaximViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_maxim, parent, false);
@@ -62,7 +64,7 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
 
     @SuppressWarnings("ResourceType")
     @Override
-    public void onBindViewHolder(MaximViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull MaximViewHolder holder, int position)
     {
         final MaximFeedItemViewModel maximFeedItemViewModel = maximFeedItemViewModelList.get(position);
 
@@ -80,7 +82,7 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
             {
                 if (maximViewHolderListener != null)
                 {
-                    maximViewHolderListener.onLongClick(maximFeedItemViewModel.getMaxim());
+                    maximViewHolderListener.onLongClick(maximFeedItemViewModel);
                 }
 
                 return true;
@@ -98,21 +100,21 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
     // MaximViewHolder Class
     //==============================================================================================
 
-    public static class MaximViewHolder extends RecyclerView.ViewHolder
+    static class MaximViewHolder extends RecyclerView.ViewHolder
     {
-        public final View rootView;
-        public final TextView messageTextView;
-        public final TextView authorTextView;
-        public final TextView tagsTextView;
+        final View rootView;
+        final TextView messageTextView;
+        final TextView authorTextView;
+        final TextView tagsTextView;
 
-        public MaximViewHolder(View rootView)
+        MaximViewHolder(View rootView)
         {
             super(rootView);
 
             this.rootView = rootView;
-            messageTextView = (TextView) rootView.findViewById(R.id.messageTextView);
-            authorTextView = (TextView) rootView.findViewById(R.id.authorTextView);
-            tagsTextView = (TextView) rootView.findViewById(R.id.tagsTextView);
+            messageTextView = rootView.findViewById(R.id.messageTextView);
+            authorTextView = rootView.findViewById(R.id.authorTextView);
+            tagsTextView = rootView.findViewById(R.id.tagsTextView);
         }
     }
 
@@ -122,7 +124,7 @@ class MaximFeedAdapter extends RecyclerView.Adapter<MaximFeedAdapter.MaximViewHo
 
     public interface MaximViewHolderListener
     {
-        void onLongClick(Maxim maxim);
+        void onLongClick(MaximFeedItemViewModel viewModel);
     }
 
 }

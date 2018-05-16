@@ -9,8 +9,10 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.tcolligan.maximmaker.R;
+import com.tcolligan.maximmaker.data.Callback;
 import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.data.MaximManager;
+import com.tcolligan.maximmaker.data.MaximRepository;
+import com.tcolligan.maximmaker.data.RepositoryManager;
 import com.tcolligan.maximmaker.data.WidgetMaximCache;
 
 import java.util.ArrayList;
@@ -28,16 +30,17 @@ import java.util.Random;
 public class MaximWidgetProvider extends AppWidgetProvider
 {
     private static final Random random = new Random();
+    private static final MaximRepository maximRepository = RepositoryManager.getInstance().getMaximRepository();
 
     @Override
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds)
     {
-        MaximManager.getInstance().loadMaxims(context, new MaximManager.MaximsLoadedListener()
+        maximRepository.fetchAllMaxims(new Callback<List<Maxim>>()
         {
             @Override
-            public void onMaximsLoaded(List<Maxim> loadedMaximList)
+            public void onSuccess(List<Maxim> data)
             {
-                updateWidgets(context, appWidgetManager, appWidgetIds, loadedMaximList);
+                updateWidgets(context, appWidgetManager, appWidgetIds, data);
             }
         });
     }
@@ -51,7 +54,7 @@ public class MaximWidgetProvider extends AppWidgetProvider
 
         for (int widgetId : appWidgetIds)
         {
-            List<String> displayedMaximIdsList = WidgetMaximCache.getDisplayedMaximIdsList();
+            List<Integer> displayedMaximIdsList = WidgetMaximCache.getDisplayedMaximIdsList();
             Maxim maximToDisplay = retrieveNewRandomMaximToDisplay(loadedMaximList, displayedMaximIdsList);
 
             if (maximToDisplay == null)
@@ -65,22 +68,22 @@ public class MaximWidgetProvider extends AppWidgetProvider
 
             if (maximToDisplay != null)
             {
-                WidgetMaximCache.addDisplayedMaximId(context, maximToDisplay.getUuid());
+                WidgetMaximCache.addDisplayedMaximId(context, maximToDisplay.getId());
             }
         }
     }
 
-    private Maxim retrieveNewRandomMaximToDisplay(final List<Maxim> loadedMaximList, List<String> displayedMaximIdsList)
+    private Maxim retrieveNewRandomMaximToDisplay(final List<Maxim> loadedMaximList, List<Integer> displayedMaximIdsList)
     {
         final List<Maxim> availableMaximsList = new ArrayList<>(loadedMaximList);
 
-        for (String displayedMaximId : displayedMaximIdsList)
+        for (Integer displayedMaximId : displayedMaximIdsList)
         {
             for (int i = 0; i < availableMaximsList.size(); i++)
             {
                 Maxim availableMaxim = availableMaximsList.get(i);
 
-                if (availableMaxim.getUuid().equals(displayedMaximId))
+                if (availableMaxim.getId() == displayedMaximId)
                 {
                     availableMaximsList.remove(availableMaxim);
                     break;
@@ -114,11 +117,11 @@ public class MaximWidgetProvider extends AppWidgetProvider
         else
         {
             remoteViews.setTextViewText(R.id.messageTextView, maximToDisplay.getMessage());
-            remoteViews.setTextViewText(R.id.authorTextView, maximToDisplay.hasAuthor() ?
+            remoteViews.setTextViewText(R.id.authorTextView, maximToDisplay.getAuthor() != null ?
                     String.format(Locale.US, "- %s", maximToDisplay.getAuthor()) : "");
 
-            remoteViews.setTextViewText(R.id.tagsTextView, maximToDisplay.hasTags() ?
-                    maximToDisplay.getTagsCommaSeparated() : "");
+            remoteViews.setTextViewText(R.id.tagsTextView, maximToDisplay.getTags() != null ?
+                    maximToDisplay.getTags() : "");
 
             remoteViews.setViewVisibility(R.id.noMaximsTextView, View.GONE);
             remoteViews.setViewVisibility(R.id.messageTextView, View.VISIBLE);

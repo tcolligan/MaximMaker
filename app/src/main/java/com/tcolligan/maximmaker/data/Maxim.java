@@ -1,100 +1,64 @@
 package com.tcolligan.maximmaker.data;
 
-import android.text.TextUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 /**
- * A model that represents a specific maxim or quote.
- * <p/>
- * Created on 3/28/2016.
+ * A model that represents a specific Maxim or quote.
+ * <p>
+ * Created on 5/14/18.
  *
  * @author Thomas Colligan
  */
+
+@Entity(tableName = "maxims")
 public class Maxim
 {
     //==============================================================================================
     // Class Properties
     //==============================================================================================
 
-    private static final String KEY_UUID = "kUuid";
-    private static final String KEY_MESSAGE = "kMessage";
-    private static final String KEY_AUTHOR = "kAuthor";
-    private static final String KEY_TAGS = "kTags";
-    private static final String KEY_CREATION_TIMESTAMP = "kCreationTimestamp";
-    private static final String COMMA_SEPARATOR = ", ";
-    private static final String TO_STRING_SEPARATOR = " | ";
+    @PrimaryKey(autoGenerate = true)
+    private int id;
 
-    private String uuid;
     private String message;
+
     private String author;
-    private List<String> tagsList;
-    private long creationTimestamp;
+
+    private String tags;
+
+    @ColumnInfo(name = "creation_timestamp")
+    private long creationTimestampMilliseconds;
 
     //==============================================================================================
-    // Constructors
+    // Constructor
     //==============================================================================================
 
-    public Maxim(String message, String author, List<String> tagsList)
+    public Maxim(@NonNull String message,
+                 String author,
+                 String tags,
+                 long creationTimestampMilliseconds)
     {
         this.message = message;
         this.author = author;
-        this.tagsList = tagsList;
-
-        this.uuid = UUID.randomUUID().toString();
-        this.creationTimestamp = System.currentTimeMillis();
-    }
-
-    public Maxim(JSONObject jsonObject) throws JSONException
-    {
-        uuid = jsonObject.getString(KEY_UUID);
-        message = jsonObject.getString(KEY_MESSAGE);
-        author = jsonObject.optString(KEY_AUTHOR, null);
-        creationTimestamp = jsonObject.getLong(KEY_CREATION_TIMESTAMP);
-
-        JSONArray tagsArray = jsonObject.optJSONArray(KEY_TAGS);
-
-        if (tagsArray != null)
-        {
-            tagsList = new ArrayList<>();
-
-            for (int i = 0; i < tagsArray.length(); i++)
-            {
-                String tag = tagsArray.getString(i);
-                tagsList.add(tag);
-            }
-        }
+        this.tags = tags;
+        this.creationTimestampMilliseconds = creationTimestampMilliseconds;
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
-    public boolean hasAuthor()
+    public int getId()
     {
-        return author != null;
+        return id;
     }
 
-    public boolean hasTags()
+    public void setId(int id)
     {
-        return tagsList != null;
-    }
-
-    public String getUuid()
-    {
-        return uuid;
-    }
-
-    public void setMessage(String message)
-    {
-        this.message = message;
+        this.id = id;
     }
 
     public String getMessage()
@@ -102,9 +66,9 @@ public class Maxim
         return message;
     }
 
-    public void setAuthor(String author)
+    public void setMessage(@NonNull String message)
     {
-        this.author = author;
+        this.message = message;
     }
 
     public String getAuthor()
@@ -112,81 +76,28 @@ public class Maxim
         return author;
     }
 
-    public void setTagsList(List<String> tagsList)
+    public void setAuthor(String author)
     {
-        this.tagsList = tagsList;
+        this.author = author;
     }
 
-    public List<String> getTagsList()
+    public String getTags()
     {
-        return tagsList;
+        return tags;
     }
 
-    public long getCreationTimestamp()
+    public void setTags(String tags)
     {
-        return creationTimestamp;
+        this.tags = tags;
     }
 
-    public String getTagsCommaSeparated()
+    public long getCreationTimestampMilliseconds()
     {
-        return TextUtils.join(COMMA_SEPARATOR, tagsList);
+        return creationTimestampMilliseconds;
     }
 
-    public JSONObject toJSONObject() throws JSONException
+    public void setCreationTimestampMilliseconds(long creationTimestampMilliseconds)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        jsonObject.put(KEY_UUID, uuid);
-        jsonObject.put(KEY_MESSAGE, message);
-
-        if (hasAuthor())
-        {
-            jsonObject.put(KEY_AUTHOR, author);
-        }
-
-        jsonObject.put(KEY_CREATION_TIMESTAMP, creationTimestamp);
-
-        if (hasTags())
-        {
-            JSONArray jsonArray = new JSONArray();
-
-            for (String tag : tagsList)
-            {
-                jsonArray.put(tag);
-            }
-
-            jsonObject.put(KEY_TAGS, jsonArray);
-        }
-
-        return jsonObject;
+        this.creationTimestampMilliseconds = creationTimestampMilliseconds;
     }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append(uuid);
-        stringBuilder.append(TO_STRING_SEPARATOR);
-
-        stringBuilder.append(message);
-        stringBuilder.append(TO_STRING_SEPARATOR);
-
-        if (hasAuthor())
-        {
-            stringBuilder.append(author);
-            stringBuilder.append(TO_STRING_SEPARATOR);
-        }
-
-        if (hasTags())
-        {
-            stringBuilder.append(getTagsCommaSeparated());
-            stringBuilder.append(TO_STRING_SEPARATOR);
-        }
-
-        stringBuilder.append(new Date(creationTimestamp).toString());
-
-        return stringBuilder.toString();
-    }
-
 }

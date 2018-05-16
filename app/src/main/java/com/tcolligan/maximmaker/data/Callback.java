@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.datav2;
+package com.tcolligan.maximmaker.data;
 
 /**
  * A generic callback interface.

@@ -1,56 +1,50 @@
-package com.tcolligan.maximmaker.ui.feedscreen;
+package com.tcolligan.maximmaker.domain.feed;
 
 import android.view.View;
 
-import com.tcolligan.maximmaker.data.Maxim;
+import com.tcolligan.maximmaker.domain.add.MaximViewModel;
 
 import java.util.Locale;
 
 /**
- * A view model class that is used in {@link MaximFeedAdapter} to help display what a Maxim
- * looks like inside of the Maxim feed.
- *
+ * A view model class that is used to help display what a Maxim looks like
+ * inside of the Maxim feed.
+ * <p>
  * Created on 7/24/2016.
  *
  * @author Thomas Colligan
  */
-class MaximFeedItemViewModel
+public class MaximFeedItemViewModel extends MaximViewModel
 {
     //==============================================================================================
     // Class Properties
     //==============================================================================================
 
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-    private Maxim maxim;
 
     //==============================================================================================
     // Constructor
     //==============================================================================================
 
-    public MaximFeedItemViewModel(Maxim maxim)
+    MaximFeedItemViewModel(int id)
     {
-        this.maxim = maxim;
+        super(id);
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
-    public Maxim getMaxim()
-    {
-        return maxim;
-    }
-
     public String getMessageText()
     {
-        return maxim.getMessage();
+        return message;
     }
 
     public String getAuthorText()
     {
-        if (maxim.hasAuthor())
+        if (hasAuthor())
         {
-            return (String.format(DEFAULT_LOCALE, "- %s", maxim.getAuthor()));
+            return (String.format(DEFAULT_LOCALE, "- %s", author));
         }
 
         return "";
@@ -58,9 +52,9 @@ class MaximFeedItemViewModel
 
     public String getTagsText()
     {
-        if (maxim.hasTags())
+        if (hasTags())
         {
-            return maxim.getTagsCommaSeparated();
+            return tags;
         }
 
         return "";
@@ -68,7 +62,7 @@ class MaximFeedItemViewModel
 
     public int getAuthorTextViewVisibility()
     {
-        if (maxim.hasAuthor())
+        if (hasAuthor())
         {
             return View.VISIBLE;
         }
@@ -78,7 +72,7 @@ class MaximFeedItemViewModel
 
     public int getTagsTextViewVisibility()
     {
-        if (maxim.hasTags())
+        if (hasTags())
         {
             return View.VISIBLE;
         }

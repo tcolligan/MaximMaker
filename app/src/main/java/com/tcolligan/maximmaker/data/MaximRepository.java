@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.datav2;
+package com.tcolligan.maximmaker.data;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -130,6 +130,18 @@ public class MaximRepository
                         }
                     }
                 });
+            }
+        });
+    }
+
+    public void updateMaxim(@NonNull final Maxim maxim)
+    {
+        appExecutors.diskIO().execute(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                maximDatabase.maximDao().insert(maxim);
             }
         });
     }

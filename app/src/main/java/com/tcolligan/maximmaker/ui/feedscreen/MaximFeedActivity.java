@@ -1,37 +1,27 @@
 package com.tcolligan.maximmaker.ui.feedscreen;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tcolligan.maximmaker.R;
-import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.domain.MaximFeedPresenter;
+import com.tcolligan.maximmaker.domain.feed.MaximFeedItemViewModel;
+import com.tcolligan.maximmaker.domain.feed.MaximFeedPresenter;
 import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * An activity that displays all of the Maxims that the user has saved in a feed style UI.
@@ -46,15 +36,11 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     // Class Properties
     //==============================================================================================
 
-    private static final String EXPORT_SEPARATOR = "\n";
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy - hh:mm aa", Locale.getDefault());
-
     private ProgressBar progressBar;
     private TextView messageTextView;
     private RecyclerView recyclerView;
     private MaximFeedAdapter maximFeedAdapter;
     private MaximFeedPresenter maximFeedPresenter;
-    private List<MaximFeedItemViewModel> maximFeedItemViewModelList;
 
     //==============================================================================================
     // Life-Cycle Methods
@@ -66,12 +52,35 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maxim_feed);
 
-        maximFeedItemViewModelList = new ArrayList<>();
-
         findAllViews();
         setupRecyclerView();
         setupPresenterAndAdapter();
     }
+
+    private void findAllViews()
+    {
+        progressBar = findViewById(R.id.progressBar);
+        messageTextView = findViewById(R.id.messageTextView);
+        recyclerView = findViewById(R.id.recyclerView);
+    }
+
+    private void setupRecyclerView()
+    {
+        assert recyclerView != null;
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new MaximFeedItemDecorator());
+    }
+
+    private void setupPresenterAndAdapter()
+    {
+        maximFeedPresenter = new MaximFeedPresenter();
+        maximFeedPresenter.attachView(this);
+
+        maximFeedAdapter = new MaximFeedAdapter(this);
+        recyclerView.setAdapter(maximFeedAdapter);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -114,6 +123,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     public void onDestroy()
     {
         super.onDestroy();
+        maximFeedPresenter.detachView();
         maximFeedPresenter = null;
     }
 
@@ -131,27 +141,6 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     // Class Instance Methods
     //==============================================================================================
 
-    private void findAllViews()
-    {
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        messageTextView = (TextView) findViewById(R.id.messageTextView);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-    }
-
-    private void setupRecyclerView()
-    {
-        assert recyclerView != null;
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new MaximFeedItemDecorator());
-    }
-
-    private void setupPresenterAndAdapter()
-    {
-        maximFeedPresenter = new MaximFeedPresenter(getApplicationContext(), this);
-        maximFeedAdapter = new MaximFeedAdapter(this);
-        recyclerView.setAdapter(maximFeedAdapter);
-    }
 
     private void setupSearchQueryListener(SearchView searchView)
     {
@@ -197,9 +186,9 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     //==============================================================================================
 
     @Override
-    public void onLongClick(final Maxim maxim)
+    public void onLongClick(final MaximFeedItemViewModel viewModel)
     {
-        maximFeedPresenter.onMaximLongClick(maxim);
+        maximFeedPresenter.onMaximLongClick(viewModel);
     }
 
     //==============================================================================================
@@ -235,16 +224,9 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showMaxims(List<Maxim> maximList)
+    public void showMaxims(List<MaximFeedItemViewModel> viewModels)
     {
-        maximFeedItemViewModelList.clear();
-
-        for (Maxim maxim : maximList)
-        {
-            maximFeedItemViewModelList.add(new MaximFeedItemViewModel(maxim));
-        }
-
-        maximFeedAdapter.setMaximFeedItemViewModelList(maximFeedItemViewModelList);
+        maximFeedAdapter.setMaximFeedItemViewModelList(viewModels);
         maximFeedAdapter.notifyDataSetChanged();
 
         progressBar.setVisibility(View.GONE);
@@ -253,7 +235,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showEditOrDeleteMaximDialog(final Maxim maxim)
+    public void showEditOrDeleteMaximDialog(final int maximId)
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.edit_of_delete_maxim_message)
@@ -262,7 +244,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        maximFeedPresenter.onEditMaxim(maxim);
+                        maximFeedPresenter.onEditMaxim(maximId);
                     }
                 })
                 .setNegativeButton(R.string.delete_button_text, new DialogInterface.OnClickListener()
@@ -270,7 +252,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        maximFeedPresenter.onDeleteMaxim(maxim);
+                        maximFeedPresenter.onDeleteMaxim(maximId);
                     }
                 })
                 .create()
@@ -278,7 +260,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showConfirmMaximDeletionDialog(final Maxim maxim)
+    public void showConfirmMaximDeletionDialog(final int maximId)
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.delete_maxim_dialog_message)
@@ -287,7 +269,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        maximFeedPresenter.onDeleteMaximConfirmed(maxim);
+                        maximFeedPresenter.onDeleteMaximConfirmed(maximId);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -303,14 +285,12 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showEditMaximScreen(Maxim maximToEdit)
+    public void showEditMaximScreen(int maximId)
     {
-        Intent intent = new Intent(this, AddMaximActivity.class);
-        intent.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_UUID, maximToEdit.getUuid());
-        startActivity(intent);
+        AddMaximActivity.startToEditMaxim(this, maximId);
     }
 
-    @Override
+    /*@Override
     public void exportMaximsToEmail(List<Maxim> maximList)
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -336,13 +316,13 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         {
             startActivity(intent);
         }
-    }
+    }*/
 
     //==============================================================================================
     // Helper Methods
     //==============================================================================================
 
-    private static  String convertMaximToExportText(Context context, Maxim maxim)
+    /*private static  String convertMaximToExportText(Context context, Maxim maxim)
     {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -375,6 +355,6 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
         stringBuilder.append(simpleDateFormat.format(date));
 
         return stringBuilder.toString();
-    }
+    }*/
 
 }

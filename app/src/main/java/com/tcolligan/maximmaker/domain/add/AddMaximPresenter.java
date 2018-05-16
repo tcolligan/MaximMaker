@@ -1,17 +1,14 @@
-package com.tcolligan.maximmaker.domain;
+package com.tcolligan.maximmaker.domain.add;
 
-import android.content.Context;
 import android.text.TextUtils;
 
+import com.tcolligan.maximmaker.data.Callback;
 import com.tcolligan.maximmaker.data.Maxim;
-import com.tcolligan.maximmaker.data.MaximManager;
-import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
-
-import java.util.Arrays;
-import java.util.List;
+import com.tcolligan.maximmaker.data.MaximRepository;
+import com.tcolligan.maximmaker.data.RepositoryManager;
 
 /**
- * A presenter class to handle some of the logic for {@link AddMaximActivity}
+ * A presenter class to handle some of the logic for AddMaximActivity
  * <p/>
  * Created on 7/4/2016.
  *
@@ -23,61 +20,83 @@ public class AddMaximPresenter
     // Class Properties
     //==============================================================================================
 
-    private static final String TAGS_SEPARATOR = ",";
-    private final Context context;
-    private final AddMaximView addMaximView;
-    private final MaximManager maximManager;
+    private AddMaximView view;
+    private final MaximRepository maximRepository;
     private Maxim maximToEdit;
 
     //==============================================================================================
     // Constructor
     //==============================================================================================
 
-    public AddMaximPresenter(Context context, AddMaximView addMaximView)
+    public AddMaximPresenter()
     {
-        this.context = context.getApplicationContext();
-        this.addMaximView = addMaximView;
-        this.maximManager = MaximManager.getInstance();
-    }
-
-    //==============================================================================================
-    // Presenter Action Methods
-    //==============================================================================================
-
-    public void onMaximToEditUuidFound(String maximToEditUuid)
-    {
-        if (maximToEditUuid != null)
-        {
-            maximToEdit = maximManager.findMaximWithUuid(maximToEditUuid);
-            addMaximView.showMaxim(maximToEdit);
-        }
-    }
-
-    public void onSaveClicked(String maxim, String author, String tags)
-    {
-        if (TextUtils.isEmpty(maxim))
-        {
-            addMaximView.showAddMaximErrorDialog();
-            return;
-        }
-
-        if (maximToEdit == null)
-        {
-            saveNewMaxim(maxim, author, tags);
-        }
-        else
-        {
-            saveEditedMaxim(maxim, author, tags);
-        }
-
-        addMaximView.finish();
+        this.maximRepository = RepositoryManager.getInstance().getMaximRepository();
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
-    private void saveNewMaxim(String message, String author, String tags)
+    public void attachView(AddMaximView view)
+    {
+        this.view = view;
+    }
+
+    public void detachView()
+    {
+        this.view = null;
+    }
+
+    //==============================================================================================
+    // Presenter Action Methods
+    //==============================================================================================
+
+    public void onMaximToEditUuidFound(int maximToEditUuid)
+    {
+        view.showLoading();
+
+        maximRepository.findMaximById(maximToEditUuid, new Callback<Maxim>()
+        {
+            @Override
+            public void onSuccess(Maxim data)
+            {
+                maximToEdit = data;
+                MaximViewModel viewModel = MaximViewModelConverter.convertMaximToViewModel(maximToEdit);
+
+                if (view != null)
+                {
+                    view.dismissLoading();
+                    view.showMaxim(viewModel);
+                }
+            }
+        });
+    }
+
+    public void onSaveClicked(String maxim, String author, String tags, long timestamp)
+    {
+        if (TextUtils.isEmpty(maxim))
+        {
+            view.showAddMaximErrorDialog();
+            return;
+        }
+
+        if (maximToEdit == null)
+        {
+            saveNewMaxim(maxim, author, tags, timestamp);
+        }
+        else
+        {
+            saveEditedMaxim(maxim, author, tags);
+        }
+
+        view.finish();
+    }
+
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
+
+    private void saveNewMaxim(String message, String author, String tags, long timestamp)
     {
         message = message.trim();
         author = author.trim();
@@ -93,8 +112,8 @@ public class AddMaximPresenter
             author = null;
         }
 
-        Maxim maxim = new Maxim(message, author, tagsToList(tags));
-        maximManager.addAndSaveMaxim(context, maxim);
+        Maxim maxim = new Maxim(message, author, tags, timestamp);
+        maximRepository.addMaxim(maxim);
     }
 
     private void saveEditedMaxim(String message, String author, String tags)
@@ -115,32 +134,8 @@ public class AddMaximPresenter
 
         maximToEdit.setMessage(message);
         maximToEdit.setAuthor(author);
-        maximToEdit.setTagsList(tagsToList(tags));
-
-        maximManager.saveMaxims(context);
-    }
-
-    //==============================================================================================
-    // Static Helper Methods
-    //==============================================================================================
-
-    private static List<String> tagsToList(String tags)
-    {
-        List<String> tagsList = null;
-
-        if (!TextUtils.isEmpty(tags))
-        {
-            String[] tagArray = tags.split(TAGS_SEPARATOR);
-
-            for (int i = 0; i < tagArray.length; i++)
-            {
-                tagArray[i] = tagArray[i].trim();
-            }
-
-            tagsList = Arrays.asList(tagArray);
-        }
-
-        return tagsList;
+        maximToEdit.setTags(tags);
+        maximRepository.updateMaxim(maximToEdit);
     }
 
     //==============================================================================================
@@ -149,7 +144,11 @@ public class AddMaximPresenter
 
     public interface AddMaximView
     {
-        void showMaxim(Maxim maxim);
+        void showLoading();
+
+        void dismissLoading();
+
+        void showMaxim(MaximViewModel viewModel);
 
         void showAddMaximErrorDialog();
 
