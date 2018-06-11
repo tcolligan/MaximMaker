@@ -1,5 +1,6 @@
 package com.tcolligan.maximmaker.domain.feed;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.tcolligan.maximmaker.domain.add.MaximViewModel;
@@ -26,20 +27,22 @@ public class MaximFeedItemViewModel extends MaximViewModel
     // Constructor
     //==============================================================================================
 
-    MaximFeedItemViewModel(int id)
+    MaximFeedItemViewModel(long id, @NonNull String message)
     {
-        super(id);
+        super(id, message);
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
+    @NonNull
     public String getMessageText()
     {
         return message;
     }
 
+    @NonNull
     public String getAuthorText()
     {
         if (hasAuthor())
@@ -50,9 +53,10 @@ public class MaximFeedItemViewModel extends MaximViewModel
         return "";
     }
 
+    @NonNull
     public String getTagsText()
     {
-        if (hasTags())
+        if (tags != null)
         {
             return tags;
         }

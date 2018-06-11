@@ -4,6 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.Locale;
 
 /**
  * A model that represents a specific Maxim or quote.
@@ -21,13 +24,13 @@ public class Maxim
     //==============================================================================================
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private long id;
 
-    private String message;
+    private @NonNull String message;
 
-    private String author;
+    private @Nullable String author;
 
-    private String tags;
+    private @Nullable String tags;
 
     @ColumnInfo(name = "creation_timestamp")
     private long creationTimestampMilliseconds;
@@ -37,8 +40,8 @@ public class Maxim
     //==============================================================================================
 
     public Maxim(@NonNull String message,
-                 String author,
-                 String tags,
+                 @Nullable String author,
+                 @Nullable String tags,
                  long creationTimestampMilliseconds)
     {
         this.message = message;
@@ -51,16 +54,17 @@ public class Maxim
     // Class Instance Methods
     //==============================================================================================
 
-    public int getId()
+    public long getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(long id)
     {
         this.id = id;
     }
 
+    @NonNull
     public String getMessage()
     {
         return message;
@@ -71,22 +75,24 @@ public class Maxim
         this.message = message;
     }
 
+    @Nullable
     public String getAuthor()
     {
         return author;
     }
 
-    public void setAuthor(String author)
+    public void setAuthor(@Nullable String author)
     {
         this.author = author;
     }
 
+    @Nullable
     public String getTags()
     {
         return tags;
     }
 
-    public void setTags(String tags)
+    public void setTags(@Nullable String tags)
     {
         this.tags = tags;
     }
@@ -99,5 +105,25 @@ public class Maxim
     public void setCreationTimestampMilliseconds(long creationTimestampMilliseconds)
     {
         this.creationTimestampMilliseconds = creationTimestampMilliseconds;
+    }
+
+    @Override
+    public boolean equals(Object object)
+    {
+        if (object instanceof Maxim)
+        {
+            Maxim maxim = (Maxim) object;
+            return id == maxim.id;
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.US,
+                "ID: %d \nMessage: %s \nAuthor: %s \nTags: %s \nCreation Timestamp: %d",
+                id, message, author, tags, creationTimestampMilliseconds);
     }
 }

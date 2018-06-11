@@ -6,7 +6,7 @@ import com.tcolligan.maximmaker.core.AppExecutors;
 import com.tcolligan.maximmaker.core.MyApplication;
 
 /**
- * A singleton to keep track of repositories.
+ * A singleton to keep track of and initalize repositories.
  * <p>
  * Created on 5/14/18.
  *
@@ -15,9 +15,17 @@ import com.tcolligan.maximmaker.core.MyApplication;
 
 public class RepositoryManager
 {
+    //==============================================================================================
+    // Class Properties
+    //==============================================================================================
+
     private static RepositoryManager INSTANCE;
     private AppExecutors appExecutors;
     private MaximRepository maximRepository;
+
+    //==============================================================================================
+    // Constructor
+    //==============================================================================================
 
     private RepositoryManager()
     {
@@ -25,6 +33,10 @@ public class RepositoryManager
         appExecutors = new AppExecutors();
         maximRepository = new MaximRepository(appExecutors, MaximDatabase.getDatabase(application));
     }
+
+    //==============================================================================================
+    // Static Class Methods
+    //==============================================================================================
 
     public static RepositoryManager getInstance()
     {
@@ -41,6 +53,10 @@ public class RepositoryManager
 
         return INSTANCE;
     }
+
+    //==============================================================================================
+    // Class Instance Methods
+    //==============================================================================================
 
     public MaximRepository getMaximRepository()
     {

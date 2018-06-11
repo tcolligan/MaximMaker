@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.domain.feed.MaximFeedItemViewModel;
-import com.tcolligan.maximmaker.domain.feed.MaximFeedPresenter;
 import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
 
 import java.util.List;
@@ -235,7 +234,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showEditOrDeleteMaximDialog(final int maximId)
+    public void showEditOrDeleteMaximDialog(final long maximId)
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.edit_of_delete_maxim_message)
@@ -260,7 +259,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showConfirmMaximDeletionDialog(final int maximId)
+    public void showConfirmMaximDeletionDialog(final long maximId)
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.delete_maxim_dialog_message)
@@ -285,7 +284,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showEditMaximScreen(int maximId)
+    public void showEditMaximScreen(long maximId)
     {
         AddMaximActivity.startToEditMaxim(this, maximId);
     }

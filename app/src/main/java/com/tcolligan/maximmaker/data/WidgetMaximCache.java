@@ -90,7 +90,7 @@ public class WidgetMaximCache
         return displayedMaximIdsList;
     }
 
-    public static void addDisplayedMaximId(Context context, int maximId)
+    public static void addDisplayedMaximId(Context context, long maximId)
     {
         displayedMaximIdsArray.put(maximId);
 

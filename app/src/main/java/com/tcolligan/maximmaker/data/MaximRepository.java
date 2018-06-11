@@ -9,6 +9,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.BehaviorSubject;
+
 /**
  * A repository for accessing Maxims.
  * <p>
@@ -25,88 +29,75 @@ public class MaximRepository
 
     private AppExecutors appExecutors;
     private MaximDatabase maximDatabase;
-    private final List<Maxim> cachedMaxims;
+    private final BehaviorSubject<List<Maxim>> maximsSubject;
 
     //==============================================================================================
     // Constructor
     //==============================================================================================
 
-    MaximRepository(AppExecutors appExecutors, MaximDatabase maximDatabase)
+    MaximRepository(@NonNull AppExecutors appExecutors, @NonNull MaximDatabase maximDatabase)
     {
         this.appExecutors = appExecutors;
         this.maximDatabase = maximDatabase;
-        this.cachedMaxims = new ArrayList<>();
+
+        List<Maxim> emptyList = new ArrayList<>();
+        this.maximsSubject = BehaviorSubject.createDefault(emptyList);
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
-    public void fetchAllMaxims(@Nullable Callback<List<Maxim>> callback)
+    @NonNull
+    public Observable<List<Maxim>> getMaximsObservable()
     {
-        if (!cachedMaxims.isEmpty() && callback != null)
-        {
-            callback.onSuccess(cachedMaxims);
-            return;
-        }
+        return maximsSubject.observeOn(AndroidSchedulers.mainThread());
+    }
 
-        final WeakReference<Callback<List<Maxim>>> weakReferenceCallback = new WeakReference<>(callback);
-
+    public void fetchAllMaxims()
+    {
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
             public void run()
             {
-                final List<Maxim> allMaxims = maximDatabase.maximDao().getAll();
-
-                appExecutors.mainThread().execute(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        cachedMaxims.clear();
-                        cachedMaxims.addAll(allMaxims);
-                        Callback<List<Maxim>> callback = weakReferenceCallback.get();
-
-                        if (callback != null)
-                        {
-                            callback.onSuccess(cachedMaxims);
-                        }
-                    }
-                });
+                List<Maxim> maxims = maximDatabase.maximDao().getAll();
+                maximsSubject.onNext(maxims);
             }
         });
     }
 
     public void addMaxim(@NonNull final Maxim maxim)
     {
-        cachedMaxims.add(maxim);
-
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
             public void run()
             {
-                maximDatabase.maximDao().insert(maxim);
+                long id = maximDatabase.maximDao().insert(maxim);
+                maxim.setId(id);
+
+                maximsSubject.getValue().add(maxim);
+                maximsSubject.onNext(maximsSubject.getValue());
             }
         });
     }
 
     public void deleteMaxim(@NonNull final Maxim maxim)
     {
-        cachedMaxims.remove(maxim);
-
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
             public void run()
             {
-                maximDatabase.maximDao().insert(maxim);
+                maximDatabase.maximDao().delete(maxim);
+                maximsSubject.getValue().remove(maxim);
+                maximsSubject.onNext(maximsSubject.getValue());
             }
         });
     }
 
-    public void findMaximById(final int id, @Nullable Callback<Maxim> callback)
+    public void findMaximById(final long id, @Nullable Callback<Maxim> callback)
     {
         final WeakReference<Callback<Maxim>> weakReferenceCallback = new WeakReference<>(callback);
 
@@ -141,7 +132,12 @@ public class MaximRepository
             @Override
             public void run()
             {
-                maximDatabase.maximDao().insert(maxim);
+                maximDatabase.maximDao().update(maxim);
+
+                List<Maxim> maxims = maximsSubject.getValue();
+                maxims.remove(maxim);
+                maxims.add(maxim);
+                maximsSubject.onNext(maxims);
             }
         });
     }

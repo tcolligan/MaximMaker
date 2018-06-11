@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.tcolligan.maximmaker.R;
-import com.tcolligan.maximmaker.data.Callback;
 import com.tcolligan.maximmaker.data.Maxim;
 import com.tcolligan.maximmaker.data.MaximRepository;
 import com.tcolligan.maximmaker.data.RepositoryManager;
@@ -35,14 +34,14 @@ public class MaximWidgetProvider extends AppWidgetProvider
     @Override
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds)
     {
-        maximRepository.fetchAllMaxims(new Callback<List<Maxim>>()
+        /*maximRepository.fetchAllMaxims(new Callback<List<Maxim>>()
         {
             @Override
             public void onSuccess(List<Maxim> data)
             {
                 updateWidgets(context, appWidgetManager, appWidgetIds, data);
             }
-        });
+        });*/
     }
 
     private void updateWidgets(final Context context,

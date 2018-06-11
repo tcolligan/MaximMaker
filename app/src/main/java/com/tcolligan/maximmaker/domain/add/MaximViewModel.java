@@ -1,5 +1,8 @@
 package com.tcolligan.maximmaker.domain.add;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 /**
  * A ViewModel that represents Maxim data object.
  * <p>
@@ -14,45 +17,48 @@ public class MaximViewModel
     // Class Properties
     //==============================================================================================
 
-    protected int maximId;
-    protected String message;
-    protected String author;
-    protected String tags;
+    private final long maximId;
+    protected @NonNull String message;
+    protected @Nullable String author;
+    protected @Nullable String tags;
 
     //==============================================================================================
     // Constructor
     //==============================================================================================
 
-    protected MaximViewModel(int maximId)
+    public MaximViewModel(long maximId, @NonNull String message)
     {
         this.maximId = maximId;
+        this.message = message;
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
-    public int getMaximId()
+    public long getMaximId()
     {
         return maximId;
     }
 
+    @NonNull
     public String getMessage()
     {
         return message;
     }
 
-    public void setMessage(String message)
+    public void setMessage(@NonNull String message)
     {
         this.message = message;
     }
 
+    @Nullable
     public String getAuthor()
     {
         return author;
     }
 
-    public void setAuthor(String author)
+    public void setAuthor(@Nullable String author)
     {
         this.author = author;
     }
@@ -62,12 +68,13 @@ public class MaximViewModel
         return author != null;
     }
 
+    @Nullable
     public String getTags()
     {
         return tags;
     }
 
-    public void setTags(String tags)
+    public void setTags(@Nullable String tags)
     {
         this.tags = tags;
     }

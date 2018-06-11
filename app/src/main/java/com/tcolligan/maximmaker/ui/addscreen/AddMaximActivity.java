@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
 import com.tcolligan.maximmaker.R;
-import com.tcolligan.maximmaker.domain.add.AddMaximPresenter;
-import com.tcolligan.maximmaker.domain.add.AddMaximPresenter.AddMaximView;
 import com.tcolligan.maximmaker.domain.add.MaximViewModel;
+import com.tcolligan.maximmaker.ui.addscreen.AddMaximPresenter.AddMaximView;
 
 /**
  * An activity that allows users to add their own custom Maxims.
@@ -30,6 +32,8 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
     //==============================================================================================
 
     private static final String KEY_EDIT_MAXIM_ID = "KEY_EDIT_MAXIM_ID";
+    private ProgressBar progressBar;
+    private ScrollView contentScrollView;
     private EditText maximEditText;
     private EditText authorEditText;
     private EditText tagsEditText;
@@ -45,7 +49,7 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         context.startActivity(starter);
     }
 
-    public static void startToEditMaxim(Context context, int maximId)
+    public static void startToEditMaxim(Context context, long maximId)
     {
         Intent starter = new Intent(context, AddMaximActivity.class);
         starter.putExtra(AddMaximActivity.KEY_EDIT_MAXIM_ID, maximId);
@@ -77,8 +81,8 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
 
         if (extras != null)
         {
-            int id = extras.getInt(KEY_EDIT_MAXIM_ID);
-            presenter.onMaximToEditUuidFound(id);
+            long id = extras.getLong(KEY_EDIT_MAXIM_ID);
+            presenter.onHasMaximToEdit(id);
         }
     }
 
@@ -97,15 +101,11 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
         switch (item.getItemId())
         {
             case android.R.id.home:
-            {
                 onBackPressed();
                 return true;
-            }
             case R.id.save:
-            {
                 onSaveClicked();
                 return true;
-            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -138,6 +138,8 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
 
     private void findViews()
     {
+        progressBar = findViewById(R.id.progressBar);
+        contentScrollView = findViewById(R.id.contentScrollView);
         maximEditText = findViewById(R.id.maximEditText);
         authorEditText = findViewById(R.id.authorEditText);
         tagsEditText = findViewById(R.id.tagsEditText);
@@ -160,13 +162,15 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
     @Override
     public void showLoading()
     {
-        // TODO: Do this
+        progressBar.setVisibility(View.VISIBLE);
+        contentScrollView.setVisibility(View.GONE);
     }
 
     @Override
     public void dismissLoading()
     {
-        // TODO: Do this
+        progressBar.setVisibility(View.GONE);
+        contentScrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -186,7 +190,7 @@ public class AddMaximActivity extends AppCompatActivity implements AddMaximView
     }
 
     @Override
-    public void showAddMaximErrorDialog()
+    public void showMaximRequiresMessageErrorDialog()
     {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.add_maxim_error_text)

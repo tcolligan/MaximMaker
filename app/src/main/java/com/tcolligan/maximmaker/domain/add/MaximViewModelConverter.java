@@ -14,9 +14,7 @@ class MaximViewModelConverter
 {
     static MaximViewModel convertMaximToViewModel(Maxim maxim)
     {
-        MaximViewModel viewModel = new MaximViewModel(maxim.getId());
-
-        viewModel.setMessage(maxim.getMessage());
+        MaximViewModel viewModel = new MaximViewModel(maxim.getId(), maxim.getMessage());
         viewModel.setAuthor(maxim.getAuthor());
         viewModel.setTags(maxim.getTags());
 

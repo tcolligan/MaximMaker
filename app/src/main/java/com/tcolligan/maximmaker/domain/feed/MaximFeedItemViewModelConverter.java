@@ -1,5 +1,7 @@
 package com.tcolligan.maximmaker.domain.feed;
 
+import android.support.annotation.NonNull;
+
 import com.tcolligan.maximmaker.data.Maxim;
 
 import java.util.ArrayList;
@@ -13,20 +15,22 @@ import java.util.List;
  * @author Thomas Colligan
  */
 
-public class MaximFeedItemViewModelConerter
+public class MaximFeedItemViewModelConverter
 {
-    static MaximFeedItemViewModel convertMaximToViewModel(Maxim maxim)
+    @NonNull
+    static MaximFeedItemViewModel convertMaximToViewModel(@NonNull Maxim maxim)
     {
-        MaximFeedItemViewModel viewModel = new MaximFeedItemViewModel(maxim.getId());
+        MaximFeedItemViewModel viewModel = new MaximFeedItemViewModel(maxim.getId(),
+                maxim.getMessage());
 
-        viewModel.setMessage(maxim.getMessage());
         viewModel.setAuthor(maxim.getAuthor());
         viewModel.setTags(maxim.getTags());
 
         return viewModel;
     }
 
-    static List<MaximFeedItemViewModel> convertMaximsToViewModels(List<Maxim> maxims)
+    @NonNull
+    static List<MaximFeedItemViewModel> convertMaximsToViewModels(@NonNull List<Maxim> maxims)
     {
         List<MaximFeedItemViewModel> viewModels = new ArrayList<>();
 

@@ -23,7 +23,7 @@ public interface MaximDao
     List<Maxim> getAll();
 
     @Insert
-    void insert(Maxim maxim);
+    long insert(Maxim maxim);
 
     @Update
     void update(Maxim maxim);
@@ -32,5 +32,5 @@ public interface MaximDao
     void delete(Maxim maxim);
 
     @Query("SELECT * FROM maxims WHERE id = :id LIMIT 1")
-    Maxim findById(int id);
+    Maxim findById(long id);
 }
