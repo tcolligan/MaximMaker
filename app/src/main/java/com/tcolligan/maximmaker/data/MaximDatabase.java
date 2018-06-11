@@ -5,6 +5,8 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import timber.log.Timber;
+
 /**
  * Abstract class that will be used to create out database.
  * <p>
@@ -29,6 +31,7 @@ public abstract class MaximDatabase extends RoomDatabase
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             MaximDatabase.class, "maxim_database")
                             .build();
+                    Timber.d("Initialized database");
                 }
             }
         }

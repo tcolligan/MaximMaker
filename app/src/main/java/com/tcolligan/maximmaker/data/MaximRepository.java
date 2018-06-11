@@ -12,6 +12,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.BehaviorSubject;
+import timber.log.Timber;
 
 /**
  * A repository for accessing Maxims.
@@ -56,12 +57,14 @@ public class MaximRepository
 
     public void fetchAllMaxims()
     {
+        Timber.d("Fetching all maxims");
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
             public void run()
             {
                 List<Maxim> maxims = maximDatabase.maximDao().getAll();
+                Timber.d("Fetched %d maxim(s)", maxims.size());
                 maximsSubject.onNext(maxims);
             }
         });
@@ -69,6 +72,7 @@ public class MaximRepository
 
     public void addMaxim(@NonNull final Maxim maxim)
     {
+        Timber.d("Adding maxim: %s", maxim);
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
@@ -76,8 +80,9 @@ public class MaximRepository
             {
                 long id = maximDatabase.maximDao().insert(maxim);
                 maxim.setId(id);
-
                 maximsSubject.getValue().add(maxim);
+
+                Timber.d("Added maxim: %s", maxim);
                 maximsSubject.onNext(maximsSubject.getValue());
             }
         });
@@ -85,6 +90,7 @@ public class MaximRepository
 
     public void deleteMaxim(@NonNull final Maxim maxim)
     {
+        Timber.d("Deleting maxim: %s", maxim);
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
@@ -92,6 +98,8 @@ public class MaximRepository
             {
                 maximDatabase.maximDao().delete(maxim);
                 maximsSubject.getValue().remove(maxim);
+
+                Timber.d("Deleted maxim: %s", maxim);
                 maximsSubject.onNext(maximsSubject.getValue());
             }
         });
@@ -101,12 +109,14 @@ public class MaximRepository
     {
         final WeakReference<Callback<Maxim>> weakReferenceCallback = new WeakReference<>(callback);
 
+        Timber.d("Attempting to find maxim with id %d", id);
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
             public void run()
             {
                 final Maxim maxim = maximDatabase.maximDao().findById(id);
+                Timber.d("Found maxim %s", maxim);
 
                 appExecutors.mainThread().execute(new Runnable()
                 {
@@ -127,6 +137,7 @@ public class MaximRepository
 
     public void updateMaxim(@NonNull final Maxim maxim)
     {
+        Timber.d("Updating maxim: %s", maxim);
         appExecutors.diskIO().execute(new Runnable()
         {
             @Override
@@ -137,6 +148,8 @@ public class MaximRepository
                 List<Maxim> maxims = maximsSubject.getValue();
                 maxims.remove(maxim);
                 maxims.add(maxim);
+
+                Timber.d("Updated maxim: %s", maxim);
                 maximsSubject.onNext(maxims);
             }
         });
