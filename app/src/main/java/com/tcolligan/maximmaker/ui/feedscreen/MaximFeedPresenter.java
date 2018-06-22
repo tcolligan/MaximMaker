@@ -5,9 +5,12 @@ import android.support.annotation.Nullable;
 
 import com.tcolligan.maximmaker.domain.feed.FeedUseCase;
 import com.tcolligan.maximmaker.domain.feed.MaximFeedItemViewModel;
+import com.tcolligan.maximmaker.domain.feed.SearchUseCase;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -25,11 +28,15 @@ public class MaximFeedPresenter
     //==============================================================================================
 
     private @NonNull final FeedUseCase feedUseCase;
+    private @NonNull final List<MaximFeedItemViewModel> feedViewModels;
+    private @NonNull final List<MaximFeedItemViewModel> searchViewModels;
+    private @NonNull final MaximFeedView dummyView;
     private @NonNull String searchText;
     private @Nullable MaximFeedView view;
     private boolean didShowLoadingState;
     private boolean isSearching;
-    private @Nullable Disposable disposable;
+    private @Nullable Disposable feedDisposable;
+    private @Nullable Disposable searchDisposable;
 
     //==============================================================================================
     // Constructor
@@ -38,14 +45,61 @@ public class MaximFeedPresenter
     MaximFeedPresenter()
     {
         feedUseCase = new FeedUseCase();
+        feedViewModels = new ArrayList<>();
+        searchViewModels = new ArrayList<>();
         searchText = "";
+
+        dummyView = new MaximFeedView()
+        {
+            @Override
+            public void showLoadingState()
+            {
+            }
+
+            @Override
+            public void showEmptyState()
+            {
+            }
+
+            @Override
+            public void showMaxims(List<MaximFeedItemViewModel> viewModels)
+            {
+            }
+
+            @Override
+            public void showEditOrDeleteMaximDialog(long maximId)
+            {
+            }
+
+            @Override
+            public void showConfirmMaximDeletionDialog(long maximId)
+            {
+            }
+
+            @Override
+            public void showAddMaximScreen()
+            {
+            }
+
+            @Override
+            public void showEditMaximScreen(long maximId)
+            {
+            }
+        };
     }
 
     //==============================================================================================
     // Class Instance Methods
     //==============================================================================================
 
-    public void attachView(MaximFeedView maximFeedView)
+
+    @NonNull
+    public MaximFeedView getView()
+    {
+        return view == null ? dummyView : view;
+    }
+
+    public void attachView(@NonNull MaximFeedView maximFeedView)
     {
         this.view = maximFeedView;
         this.feedUseCase.startSubscribers();
@@ -54,21 +108,23 @@ public class MaximFeedPresenter
 
     private void subscribeFeedObserver()
     {
-        disposable = this.feedUseCase.getMaximViewModelsObservable().subscribe(new Consumer<List<MaximFeedItemViewModel>>()
+        feedDisposable = this.feedUseCase.getMaximViewModelsObservable().subscribe(new Consumer<List<MaximFeedItemViewModel>>()
         {
             @Override
             public void accept(List<MaximFeedItemViewModel> maximFeedItemViewModels)
             {
-                if (view != null)
+                feedViewModels.clear();
+                searchViewModels.clear();
+                feedViewModels.addAll(maximFeedItemViewModels);
+                searchViewModels.addAll(maximFeedItemViewModels);
+
+                if (isSearching)
                 {
-                    if (isSearching)
-                    {
-                        showMaximsForSearchText();
-                    }
-                    else
-                    {
-                        showMaximsWithFeedStates(maximFeedItemViewModels);
-                    }
+                    showMaximsForSearchText();
+                }
+                else
+                {
+                    showMaximsWithFeedStates();
                 }
             }
         });
@@ -78,10 +134,16 @@ public class MaximFeedPresenter
     {
         this.feedUseCase.clearSubscribers();
 
-        if (disposable != null)
+        if (feedDisposable != null)
         {
-            disposable.dispose();
-            disposable = null;
+            feedDisposable.dispose();
+            feedDisposable = null;
+        }
+
+        if (searchDisposable != null)
+        {
+            searchDisposable.dispose();
+            searchDisposable = null;
         }
 
         this.view = null;
@@ -95,7 +157,7 @@ public class MaximFeedPresenter
     {
         if (!didShowLoadingState)
         {
-            view.showLoadingState();
+            getView().showLoadingState();
             didShowLoadingState = true;
             feedUseCase.loadFeed();
         }
@@ -103,17 +165,17 @@ public class MaximFeedPresenter
 
     public void onAddMaximButtonClicked()
     {
-        view.showAddMaximScreen();
+        getView().showAddMaximScreen();
     }
 
     public void onEditMaxim(long maximId)
     {
-        view.showEditMaximScreen(maximId);
+        getView().showEditMaximScreen(maximId);
     }
 
     public void onDeleteMaxim(long maximId)
     {
-        view.showConfirmMaximDeletionDialog(maximId);
+        getView().showConfirmMaximDeletionDialog(maximId);
     }
 
     public void onDeleteMaximConfirmed(long maximId)
@@ -126,7 +188,7 @@ public class MaximFeedPresenter
         // While searching, we do not want any of the empty or error states in the list to show.
         // So even if there are now maxims in the list, just show an empty list.
         isSearching = true;
-        //view.showMaxims(maximManager.getMaximList());
+        showMaximsForSearchText();
     }
 
     public void onSearch(String searchText)
@@ -138,20 +200,13 @@ public class MaximFeedPresenter
 
         this.searchText = searchText;
 
-        if (searchText.isEmpty())
-        {
-            //view.showMaxims(maximManager.getMaximList());
-        }
-        else
-        {
-            showMaximsForSearchText();
-        }
+        showMaximsForSearchText();
     }
 
     public void onSearchClosed()
     {
         isSearching = false;
-        //showMaximsWithFeedStates(maximManager.getMaximList());
+        showMaximsWithFeedStates();
     }
 
     public void onExportClicked()
@@ -161,7 +216,7 @@ public class MaximFeedPresenter
 
     public void onMaximLongClick(MaximFeedItemViewModel viewModel)
     {
-        view.showEditOrDeleteMaximDialog(viewModel.getMaximId());
+        getView().showEditOrDeleteMaximDialog(viewModel.getMaximId());
     }
 
     //==============================================================================================
@@ -170,41 +225,45 @@ public class MaximFeedPresenter
 
     private void showMaximsForSearchText()
     {
-        /*Locale defaultLocale = Locale.getDefault();
-        List<Maxim> searchResults = new ArrayList<>();
-        searchText = searchText.toLowerCase(defaultLocale);
-
-        for (Maxim maxim : maximManager.getMaximList())
+        if (searchDisposable != null)
         {
-            if (maxim.getMessage().toLowerCase(defaultLocale).contains(searchText) ||
-                    (maxim.hasAuthor() && maxim.getAuthor().toLowerCase(defaultLocale).contains(searchText)) ||
-                    (maxim.hasTags() && maxim.getTagsCommaSeparated().toLowerCase(defaultLocale).contains(searchText)))
-            {
-                searchResults.add(maxim);
-            }
+            searchDisposable.dispose();
+            searchDisposable = null;
         }
 
-        view.showMaxims(searchResults);*/
+        SearchUseCase.search(searchText, feedViewModels)
+                .subscribe(new SingleObserver<List<MaximFeedItemViewModel>>()
+                {
+                    @Override
+                    public void onSubscribe(Disposable d)
+                    {
+                        searchDisposable = d;
+                    }
+
+                    @Override
+                    public void onSuccess(List<MaximFeedItemViewModel> viewModels)
+                    {
+                        searchViewModels.clear();
+                        searchViewModels.addAll(viewModels);
+                        getView().showMaxims(searchViewModels);
+                    }
+
+                    @Override
+                    public void onError(Throwable e)
+                    {
+                    }
+                });
     }
 
-    private void showMaximsWithFeedStates(@Nullable List<MaximFeedItemViewModel> viewModels)
+    private void showMaximsWithFeedStates()
     {
-        if (view == null)
+        if (feedViewModels.isEmpty())
         {
-            return;
-        }
-
-        if (viewModels == null)
-        {
-            view.showLoadingError();
-        }
-        else if (viewModels.isEmpty())
-        {
-            view.showEmptyState();
+            getView().showEmptyState();
         }
         else
         {
-            view.showMaxims(viewModels);
+            getView().showMaxims(feedViewModels);
         }
     }
 
@@ -217,8 +276,6 @@ public class MaximFeedPresenter
         void showLoadingState();
 
         void showEmptyState();
-
-        void showLoadingError();
 
         void showMaxims(List<MaximFeedItemViewModel> viewModels);
 

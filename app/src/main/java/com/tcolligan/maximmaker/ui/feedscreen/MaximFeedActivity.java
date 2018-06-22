@@ -213,16 +213,6 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showLoadingError()
-    {
-        messageTextView.setText(R.string.error_loading_maxims_text);
-
-        progressBar.setVisibility(View.GONE);
-        messageTextView.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-    }
-
-    @Override
     public void showMaxims(List<MaximFeedItemViewModel> viewModels)
     {
         maximFeedAdapter.setMaximFeedItemViewModelList(viewModels);
