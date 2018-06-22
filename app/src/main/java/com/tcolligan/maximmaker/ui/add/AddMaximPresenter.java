@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.ui.addscreen;
+package com.tcolligan.maximmaker.ui.add;
 
 import android.text.TextUtils;
 

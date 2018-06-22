@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.ui.feedscreen;
+package com.tcolligan.maximmaker.ui.feed;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

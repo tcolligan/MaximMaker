@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.ui.feedscreen;
+package com.tcolligan.maximmaker.ui.feed;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.domain.feed.MaximFeedItemViewModel;
-import com.tcolligan.maximmaker.ui.addscreen.AddMaximActivity;
+import com.tcolligan.maximmaker.ui.add.AddMaximActivity;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.ui.feedscreen;
+package com.tcolligan.maximmaker.ui.feed;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

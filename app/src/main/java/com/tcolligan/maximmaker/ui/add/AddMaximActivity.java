@@ -1,4 +1,4 @@
-package com.tcolligan.maximmaker.ui.addscreen;
+package com.tcolligan.maximmaker.ui.add;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.widget.ScrollView;
 
 import com.tcolligan.maximmaker.R;
 import com.tcolligan.maximmaker.domain.add.MaximViewModel;
-import com.tcolligan.maximmaker.ui.addscreen.AddMaximPresenter.AddMaximView;
+import com.tcolligan.maximmaker.ui.add.AddMaximPresenter.AddMaximView;
 
 /**
  * An activity that allows users to add their own custom Maxims.
