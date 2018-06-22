@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -213,7 +214,7 @@ public class MaximFeedActivity extends AppCompatActivity implements MaximFeedPre
     }
 
     @Override
-    public void showMaxims(List<MaximFeedItemViewModel> viewModels)
+    public void showMaxims(@NonNull List<MaximFeedItemViewModel> viewModels)
     {
         maximFeedAdapter.setMaximFeedItemViewModelList(viewModels);
         maximFeedAdapter.notifyDataSetChanged();

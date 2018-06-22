@@ -277,7 +277,7 @@ public class MaximFeedPresenter
 
         void showEmptyState();
 
-        void showMaxims(List<MaximFeedItemViewModel> viewModels);
+        void showMaxims(@NonNull List<MaximFeedItemViewModel> viewModels);
 
         void showEditOrDeleteMaximDialog(long maximId);
 
