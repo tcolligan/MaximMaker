@@ -120,6 +120,12 @@ public class Maxim
     }
 
     @Override
+    public int hashCode()
+    {
+        return Long.valueOf(id).hashCode();
+    }
+
+    @Override
     public String toString()
     {
         return String.format(Locale.US,

@@ -146,6 +146,8 @@ public class MaximRepository
                 maximDatabase.maximDao().update(maxim);
 
                 List<Maxim> maxims = maximsSubject.getValue();
+
+                // TODO: Find better way to do this, using Maxim.equals override is sloppy...
                 maxims.remove(maxim);
                 maxims.add(maxim);
 
